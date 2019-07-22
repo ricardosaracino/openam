@@ -1,0 +1,18 @@
+<!--
+  Copyright 2015-2017 ForgeRock AS. All Rights Reserved
+ 
+  Use of this code requires a commercial software license with ForgeRock AS.
+  or with one of its affiliates. All use shall be exclusively subject
+  to such license between the licensee and ForgeRock AS.
+-->
+
+<!DOCTYPE propertysheet SYSTEM "propertysheet.dtd">
+
+<propertysheet>
+    <section name="mandatorySection" defaultValue="blank.header">
+    <property required="true">
+	<label name="lblEventHandler" defaultValue="event.handler.selection.message" labelFor="rbEventHandler" />
+	<cc name="rbEventHandler" tagclass="com.sun.web.ui.taglib.html.CCRadioButtonTag" />
+    </property>
+    </section>
+</propertysheet>

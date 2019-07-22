@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2017 ForgeRock AS. All Rights Reserved
+  ~
+  ~ Use of this code requires a commercial software license with ForgeRock AS.
+  ~ or with one of its affiliates. All use shall be exclusively subject
+  ~ to such license between the licensee and ForgeRock AS.
+  -->
+
+<!DOCTYPE ModuleProperties PUBLIC "=//iPlanet//Authentication Module Properties XML Interface 1.0 DTD//EN"
+        "jar://com/sun/identity/authentication/Auth_Module_Properties.dtd">
+
+
+<ModuleProperties moduleName="SocialAuthTwitter" version="1.0" >
+
+    <Callbacks length="0" order="1" timeout="60">
+    </Callbacks>
+
+    <Callbacks length="1" order="2" timeout="60">
+        <RedirectCallback method="GET" >
+            <RedirectUrl>%REDIRECT_URL%</RedirectUrl>
+        </RedirectCallback>
+    </Callbacks>
+
+    <Callbacks length="3" order="3" timeout="300" header="Please set your password">
+        <PasswordCallback echoPassword="false" >
+            <Prompt>New Password</Prompt>
+        </PasswordCallback>
+        <PasswordCallback echoPassword="false" >
+            <Prompt>Confirm Password</Prompt>
+        </PasswordCallback>
+        <ConfirmationCallback>
+            <OptionValues>
+                <OptionValue>
+                    <Value>Submit</Value>
+                </OptionValue>
+                <OptionValue>
+                    <Value>Cancel</Value>
+                </OptionValue>
+            </OptionValues>
+        </ConfirmationCallback>
+    </Callbacks>
+
+    <Callbacks length="3" order="4" timeout="300" header="Please enter activation code">
+        <TextOutputCallback>
+            You were sent an activation code to the email address configured in your profile. Please copy and paste the activation code here and submit.
+        </TextOutputCallback>
+        <NameCallback>
+            <Prompt>Enter activation code:</Prompt>
+        </NameCallback>
+        <ConfirmationCallback>
+            <OptionValues>
+                <OptionValue>
+                    <Value>Submit</Value>
+                </OptionValue>
+                <OptionValue>
+                    <Value>Cancel</Value>
+                </OptionValue>
+            </OptionValues>
+        </ConfirmationCallback>
+    </Callbacks>
+
+    <Callbacks length="1" order="5" timeout="300">
+        <RedirectCallback method="GET" >
+            <RedirectUrl>%REDIRECT_URL%</RedirectUrl>
+        </RedirectCallback>
+    </Callbacks>
+
+ </ModuleProperties>
+

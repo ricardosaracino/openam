@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([[291],{1243:function(t,n,a){var e=a(62);t.exports=(e["default"]||e).template({compiler:[7,">= 4.0.0"],main:function(t,n,a,e,s){return'<button type="button" class="btn btn-primary" data-add-entity>\n    <i class="fa fa-plus"></i> '+t.escapeExpression((a.t||n&&n.t||a.helperMissing).call(null!=n?n:t.nullContext||{},"console.authorization.policies.list.addNew",{name:"t",hash:{},data:s}))+"\n</button>\n"},useData:true})}}]);
+//# sourceMappingURL=291.95d591fe7e.js.map

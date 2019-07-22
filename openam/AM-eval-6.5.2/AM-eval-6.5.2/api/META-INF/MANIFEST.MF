@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Implementation-Title: OpenAM API UI
+Implementation-Version: 6.5.2 - 2019-Jun-17 14:55:28
+Archiver-Version: Plexus Archiver
+Built-By: jenkins
+Specification-Vendor: ForgeRock
+Specification-Title: OpenAM API UI
+Version: 6.5.2
+Implementation-Vendor: ForgeRock
+Revision: 314d553429
+Build-Time: 2019-Jun-17 14:55:28
+Create-On: 2019-Jun-17 14:55:28
+Created-By: Apache Maven 3.2.5
+Build-Jdk: 1.8.0_181
+Specification-Version: 6.5.2 - 2019-Jun-17 14:55:28
+

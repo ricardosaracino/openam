@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([[231],{1196:function(a,e,n){var l=n(62);a.exports=(l["default"]||l).template({compiler:[7,">= 4.0.0"],main:function(a,e,n,l,o){return'<div class="panel panel-default">\n    <div data-panel-body class="panel-body" role="panel"></div>\n    <div data-panel-footer class="panel-footer clearfix"></div>\n</div>\n'},useData:true})}}]);
+//# sourceMappingURL=231.021a139820.js.map

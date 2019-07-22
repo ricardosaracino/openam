@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2011-2017 ForgeRock AS. All Rights Reserved
+ 
+  Use of this code requires a commercial software license with ForgeRock AS.
+  or with one of its affiliates. All use shall be exclusively subject
+  to such license between the licensee and ForgeRock AS.
+-->
+
+<!DOCTYPE ModuleProperties PUBLIC "=//iPlanet//Authentication Module Properties XML Interface 1.0 DTD//EN"
+        "jar://com/sun/identity/authentication/Auth_Module_Properties.dtd">
+
+
+<ModuleProperties moduleName="OAuth" version="1.0" >
+
+  <Callbacks length="0" order="1" timeout="60">
+  </Callbacks>
+
+  <Callbacks length="1" order="2" timeout="60">
+                <RedirectCallback method="GET" >
+                <RedirectUrl>%REDIRECT_URL%</RedirectUrl>
+            </RedirectCallback>
+    </Callbacks>
+
+  <Callbacks length="1" order="3" timeout="300" 
+  header="パスワードを変更してください。" template="OAuthPwd.jsp">
+  </Callbacks>
+
+  <Callbacks length="1" order="4" timeout="300"
+  header="パスワードを変更してください。" template="OAuthActivate.jsp">
+  </Callbacks>
+
+</ModuleProperties>
+
