@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash
+#!/bin/bash
   #
   # First Run Script to configure the IDP Simulator
   #

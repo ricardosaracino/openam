@@ -6,11 +6,14 @@
 
 ### Install
 ``` shell
-yum install java
+yum update 
+yum install java-1.8.0-openjdk
 yum install java-1.7.0-openjdk-devel
+yum install java-1.6.0-openjdk-devel
 yum install tomcat
 yum install tomcat-admin-webapps
 yum install maven
+yum install alternatives
 yum install unzip
 
 /usr/sbin/alternatives --config java
@@ -41,15 +44,19 @@ chmod 777 /home/testmgr/firstrun.sh
 
 ### Helpers
 ``` shell
-export JAVA_HOME="/usr/lib/jvm/java-1.8.0-ibm-1.8.0.5.35-1jpp.1.el7.x86_64/jre"
+export JAVA_HOME="/usr/lib/jvm/*version*/jre"
 source ~/.bashrc
 echo $JAVA_HOME
+
+export JAVA_OPTS="-Dcom.iplanet.am.cookie.c66Encode=true -Djavax.net.ssl.trustStore=${HOME}/SSL/jssecacerts"
+export CATALINA_OPTS="-Xmx1024m -XX:MaxPermSize=256m"
 
 export FQDN="idp-server.canadacentral.cloudapp.azure.com"
 export HOSTNAME=`echo ${FQDN} | cut -f 1 -d '.'`
 export DOMAINNAME=`expr ${FQDN} : "${HOSTNAME}\(\..*\)"`
 
 journalctl -f -u tomcat
+
 netstat -tulpn
 ```
 
