@@ -7,7 +7,7 @@
 [openam 11.0.3](https://github.com/ForgeRock/openam-community-edition/releases)
 
 ### Install
-``` shell
+```shell
 yum update 
 yum install java
 yum install tomcat
@@ -49,12 +49,14 @@ alternatives --config java
 ```
 
 
-```$xslt
+```shell
 mv /usr/share/tomcat/webapps/ROOT /usr/share/tomcat/webapps/tomcat
 
-cp /opt/openam/openam/IDPDiscovery-6.5.2.war /usr/share/tomcat/webapps/idpdiscovery.war
-
 cp -r /opt/openam/tomcat/webapps/ROOT /usr/share/tomcat/webapps/ROOT
+
+cp /opt/openam/openam/OpenAM-Community-Edition-11.0.3.war /usr/share/tomcat/webapps/opensso.war
+
+cp /opt/openam/openam/IDPDiscovery-6.5.2.war /usr/share/tomcat/webapps/idpdiscovery.war
 
 
 cp /usr/share/tomcat/conf/tomcat-users.xml /usr/share/tomcat/conf/tomcat-users.xml.old
@@ -65,24 +67,44 @@ systemctl restart tomcat
 ```
 
 ### Create User
-``` shell
+```shell
 useradd testmgr 
 passwd testmgr  
 SAMLTest1
 usermod -aG wheel testmgr  
 ```
 
+```shell
+mkdir /home/testmgr/tools
+mkdir /home/testmgr/opensso
+mkdir /home/testmgr/SSL
+
+cp /usr/lib/jvm/jre/lib/security/cacerts /home/testmgr/SSL/jssecacerts
+cp /opt/openam/openam/AM-SSOConfiguratorTools-5.1.2.5/openam-configurator-tool-14.1.2.5.jar /home/testmgr/tools/configurator.jar
+cp /opt/openam/openam/amconfig.txt /home/testmgr/tools/amconfig.txt (editfile)
+
+java -Dhttps.protocols=TLSv1 -Djavax.net.ssl.trustStore=${HOME}/SSL/jssecacerts -Djavax.net.ssl.trustStorePassword=changeit -jar /home/testmgr/tools/configurator.jar -f /home/testmgr/tools/amconfig.txt
+
+
+```
+
+
+
+
+
+
+
 ### Set Home files
-``` shell
+```shell
 cp -r /opt/idp/idsim/home/testmgr/* /home/testmgr/
 chown -R testmgr:testmgr  /home/testmgr
 find /home/testmgr -type d -exec chmod 755 {} \;
-find /home/testmgr -type f -exec chmod 666 {} \;
+find /home/testmgr -type f -exec chmod 644 {} \;
 chmod 777 /home/testmgr/firstrun.sh
 ```
 
 ### Helpers
-``` shell
+```shell
 export JAVA_HOME="/usr/lib/jvm/*version*/jre"
 source ~/.bashrc
 echo $JAVA_HOME
@@ -101,7 +123,7 @@ netstat -tulpn
 
 ## Configs from ./firstrun
 
-``` shell
+```shell
 [root@idp1 tmp]# cat amconfig.txt
      SERVER_URL=http://idp1.canadacentral.cloudapp.azure.com:8080
      DEPLOYMENT_URI=/opensso

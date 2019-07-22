@@ -1,0 +1,18 @@
+SERVER_URL=http://idp1.canadacentral.cloudapp.azure.com:8080
+DEPLOYMENT_URI=/opensso
+BASE_DIR=/home/testmgr/opensso
+locale=en_US
+PLATFORM_LOCALE=en_US
+AM_ENC_KEY=SAMLTest1
+ADMIN_PWD=SAMLTest1
+AMLDAPUSERPASSWD=SAMLTest2
+COOKIE_DOMAIN=idp1.canadacentral.cloudapp.azure.com
+DATA_STORE=embedded
+DIRECTORY_SSL=SIMPLE
+DIRECTORY_SERVER=idp1.canadacentral.cloudapp.azure.com
+DIRECTORY_PORT=50389
+DIRECTORY_ADMIN_PORT=4444
+DIRECTORY_JMX_PORT=1689
+ROOT_SUFFIX=dc=opensso,dc=java,dc=net
+DS_DIRMGRDN=cn=Directory Manager
+DS_DIRMGRPASSWD=SAMLTest1
