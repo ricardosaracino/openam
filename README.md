@@ -63,6 +63,10 @@ cp /usr/share/tomcat/conf/tomcat-users.xml /usr/share/tomcat/conf/tomcat-users.x
 
 cp /opt/openam/tomcat/conf/tomcat-users.xml /usr/share/tomcat/conf/
 
+
+mkdir /usr/share/tomcat/opensso
+
+
 systemctl restart tomcat
 ```
 
@@ -98,7 +102,7 @@ java -Dhttps.protocols=TLSv1 -Djavax.net.ssl.trustStore=${HOME}/SSL/jssecacerts 
 ```shell
 cp -r /opt/idp/idsim/home/testmgr/* /home/testmgr/
 chown -R testmgr:testmgr  /home/testmgr
-find /home/testmgr -type d -exec chmod 755 {} \;
+find  /usr/share/tomcat/opensso -type d -exec chmod 755 {} \;
 find /home/testmgr -type f -exec chmod 644 {} \;
 chmod 777 /home/testmgr/firstrun.sh
 ```
