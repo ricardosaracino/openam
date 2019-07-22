@@ -4,19 +4,64 @@
 
 [openam git](https://github.com/ForgeRock/openam-community-edition)
 
+[openam 11.0.3](https://github.com/ForgeRock/openam-community-edition/releases)
+
 ### Install
 ``` shell
 yum update 
-yum install java-1.8.0-openjdk
-yum install java-1.7.0-openjdk-devel
-yum install java-1.6.0-openjdk-devel
+yum install java
 yum install tomcat
 yum install tomcat-admin-webapps
 yum install maven
 yum install alternatives
 yum install unzip
+yum install git
 
-/usr/sbin/alternatives --config java
+
+yum install java-1.8.0-openjdk
+yum install java-1.7.0-openjdk-devel
+yum install java-1.6.0-openjdk-devel
+
+
+rpm -ivh jdk-8u80-linux-x64.rpm
+
+
+cd /opt/
+wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u79-b15/jdk-7u79-linux-x64.tar.gz"
+tar xzf jdk-7u79-linux-x64.tar.gz
+
+cd /opt/jdk1.7.0_79/
+alternatives --install /usr/bin/java java /opt/jdk1.7.0_79/bin/java 2
+alternatives --config java
+```
+
+### Init
+```
+systemctl stop firewalld
+
+systemctl start tomcat
+systemctl status tomcat
+systemctl enable tomcat
+
+hostnamectl set-hostname idp1.canadacentral.cloudapp.azure.com
+
+alternatives --config java
+```
+
+
+```$xslt
+mv /usr/share/tomcat/webapps/ROOT /usr/share/tomcat/webapps/tomcat
+
+cp /opt/openam/openam/IDPDiscovery-6.5.2.war /usr/share/tomcat/webapps/idpdiscovery.war
+
+cp -r /opt/openam/tomcat/webapps/ROOT /usr/share/tomcat/webapps/ROOT
+
+
+cp /usr/share/tomcat/conf/tomcat-users.xml /usr/share/tomcat/conf/tomcat-users.xml.old
+
+cp /opt/openam/tomcat/conf/tomcat-users.xml /usr/share/tomcat/conf/
+
+systemctl restart tomcat
 ```
 
 ### Create User
@@ -25,12 +70,6 @@ useradd testmgr
 passwd testmgr  
 SAMLTest1
 usermod -aG wheel testmgr  
-```
-
-### Host
-```
-systemctl stop firewalld
-hostnamectl set-hostname idp-server.canadacentral.cloudapp.azure.com
 ```
 
 ### Set Home files
@@ -51,7 +90,7 @@ echo $JAVA_HOME
 export JAVA_OPTS="-Dcom.iplanet.am.cookie.c66Encode=true -Djavax.net.ssl.trustStore=${HOME}/SSL/jssecacerts"
 export CATALINA_OPTS="-Xmx1024m -XX:MaxPermSize=256m"
 
-export FQDN="idp-server.canadacentral.cloudapp.azure.com"
+export FQDN="idp1.canadacentral.cloudapp.azure.com"
 export HOSTNAME=`echo ${FQDN} | cut -f 1 -d '.'`
 export DOMAINNAME=`expr ${FQDN} : "${HOSTNAME}\(\..*\)"`
 
@@ -63,8 +102,8 @@ netstat -tulpn
 ## Configs from ./firstrun
 
 ``` shell
-[root@idp-server tmp]# cat amconfig.txt
-     SERVER_URL=http://idp-server.canadacentral.cloudapp.azure.com:8080
+[root@idp1 tmp]# cat amconfig.txt
+     SERVER_URL=http://idp1.canadacentral.cloudapp.azure.com:8080
      DEPLOYMENT_URI=/opensso
      BASE_DIR=/home/testmgr/opensso
      locale=en_US
@@ -72,10 +111,10 @@ netstat -tulpn
      AM_ENC_KEY=SAMLTest1
      ADMIN_PWD=SAMLTest1
      AMLDAPUSERPASSWD=SAMLTest2
-     COOKIE_DOMAIN=idp-server.canadacentral.cloudapp.azure.com
+     COOKIE_DOMAIN=idp1.canadacentral.cloudapp.azure.com
      DATA_STORE=embedded
      DIRECTORY_SSL=SIMPLE
-     DIRECTORY_SERVER=idp-server.canadacentral.cloudapp.azure.com
+     DIRECTORY_SERVER=idp1.canadacentral.cloudapp.azure.com
      DIRECTORY_PORT=50389
      DIRECTORY_ADMIN_PORT=4444
      DIRECTORY_JMX_PORT=1689
@@ -83,19 +122,19 @@ netstat -tulpn
      DS_DIRMGRDN=cn=Directory Manager
      DS_DIRMGRPASSWD=SAMLTest1
 
-[root@idp-server tmp]# cat extensions.cnf
-subjectAltName=DNS:idp-server.canadacentral.cloudapp.azure.com,DNS:.
+[root@idp1 tmp]# cat extensions.cnf
+subjectAltName=DNS:idp1.canadacentral.cloudapp.azure.com,DNS:.
 
-[root@idp-server tmp]# cat ssoadm.bat
-     update-server-cfg -s http://idp-server.canadacentral.cloudapp.azure.com:80/opensso -a com.iplanet.am.cookie.encode=true
-     update-server-cfg -s http://idp-server.canadacentral.cloudapp.azure.com:80/opensso -a com.iplanet.am.cookie.secure=true
-     update-server-cfg -s http://idp-server.canadacentral.cloudapp.azure.com:80/opensso -a ssoadm.disabled=false
+[root@idp1 tmp]# cat ssoadm.bat
+     update-server-cfg -s http://idp1.canadacentral.cloudapp.azure.com:80/opensso -a com.iplanet.am.cookie.encode=true
+     update-server-cfg -s http://idp1.canadacentral.cloudapp.azure.com:80/opensso -a com.iplanet.am.cookie.secure=true
+     update-server-cfg -s http://idp1.canadacentral.cloudapp.azure.com:80/opensso -a ssoadm.disabled=false
      set-attr-defs -s sunFAMFederationCommon -t global -a CheckCert=off
      set-attr-defs -s sunFAMSAML2Configuration -t global -a bufferLength=4096
      set-attr-defs -s sunFAMSAML2Configuration -t global -a IDPDiscoveryCookieDomain=.idpserver.canadacentral.cloudapp.azure.com
      set-attr-defs -s sunFAMSAML2Configuration -t global -a IDPDiscoveryCookieType=SESSION
      update-auth-instance --realm / --name DataStore --attributevalues sunAMAuthDataStoreAuthLevel=2
-     create-cot --cot GCCF --prefix http://idp-server.idpserver.canadacentral.cloudapp.azure.com:80/idpdiscovery
+     create-cot --cot GCCF --prefix http://idp1.idpserver.canadacentral.cloudapp.azure.com:80/idpdiscovery
      import-entity --meta-data-file /home/testmgr/metadata/idsim.xml --extended-data-file /home/testmgr/metadata/idsim-extended.xml                    --cot GCCF
      set-attr-defs -s sunFAMFederationCommon -t global -a SignatureAlgorithm=http://www.w3.org/2001/04/xmldsig-more#rsa-sha256
 ```
