@@ -4,7 +4,7 @@
 
 [openam 11.0.3](https://github.com/ForgeRock/openam-community-edition/releases)
 
-
+>NOTE DIRECTORIES WERE RESTRUCTURED
 
 ```
 systemctl stop firewalld
@@ -130,7 +130,7 @@ Schema attribute defaults were set.
 ```
 
 
-ln -s -f ${HOME}/metadata/cats2-signed.xml ${HOME}/tomcat/webapps/ROOT/cats2-signed.xml
+ln -s -f /opensso-metadata/cats2-signed.xml /tomcat/webapps/ROOT/cats2-signed.xml
 ln -s -f ${HOME}/tomcat/logs/catalina-daemon.out ${HOME}/tomcat/webapps/ROOT/catalina-daemon.out
 touch ${HOME}/opensso/opensso/log/SAML2.access
 ln -s -f ${HOME}/opensso/opensso/log/SAML2.access ${HOME}/tomcat/webapps/ROOT/SAML2.access
