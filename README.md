@@ -98,7 +98,7 @@ chmod 400 /tmp/adminpw
 cd /opensso-admin-tools/opensso/bin/
 
 (edit host)
-./ssoadm do-batch --adminid amadmin --password-file /tmp/adminpw --batchfile cat /opt/openam/openssoadm.conf
+./ssoadm do-batch --adminid amadmin --password-file /tmp/adminpw --batchfile /opt/openam/openssoadm.conf
 
 
 
