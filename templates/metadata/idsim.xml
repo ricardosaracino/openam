@@ -84,7 +84,7 @@ XDa42EYQLU24VLKf6LQ5g987rPS22BHpz//hTVOpq6ymLluMSOOwEQ==
         <SingleLogoutService
             Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
             Location="xxPROTOCOLxx://xxHOST_NAMExx/opensso/IDPSloRedirect/metaAlias/idp"
-            ResponseLocation="https://xxHOST_NAMExx/opensso/IDPSloRedirect/metaAlias/idp"/>
+            ResponseLocation="xxPROTOCOLxx://xxHOST_NAMExx/opensso/IDPSloRedirect/metaAlias/idp"/>
         <ManageNameIDService
             Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP"
             Location="xxPROTOCOLxx://xxHOST_NAMExx/opensso/IDPMniSoap/metaAlias/idp"/>

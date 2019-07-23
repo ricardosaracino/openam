@@ -9,6 +9,7 @@
 ```
 systemctl stop firewalld
 hostnamectl set-hostname idp3.canadacentral.cloudapp.azure.com
+echo "13.88.254.72 idp3.canadacentral.cloudapp.azure.com" | tee -a /etc/hosts
 
 yum update 
 yum install git unzip alternatives java-1.8.0-openjdk-devel -y
@@ -46,7 +47,7 @@ cp /opt/openam/openam/tomcat-users.xml /tomcat/conf/tomcat-users.xml
 
 
 amAdmin:SAMLTest1
-
+```
 
 
 ```
@@ -66,72 +67,35 @@ Debug directory is /opensso-admin-tools/debug.
 Log directory is /opensso-admin-tools/log.
 The version of this tools.zip is: OpenAM 14.1.2.5
 The version of your server instance is: ForgeRock Access Management 6.5.2 Build 314d553429 (2019-June-17 15:07)
-
-
 ```
+
 
 ```
 mkdir opensso-metadata
 
+sed -e "s^xxENTITY_IDxx^`hostname`^g" -e "s^xxPROTOCOLxx^http^g" -e "s^xxHOST_NAMExx^`hostname`:8080^g" /opt/openam/templates/metadata/idsim.xml > /opensso-metadata/idsim.xml
 
+sed -e "s^xxENTITY_IDxx^`hostname`^g" -e "s^xxPROTOCOLxx^http^g" -e "s^xxHOST_NAMExx^`hostname`:8080^g" /opt/openam/templates/metadata/idsim-extended.xml > /opensso-metadata/idsim-extended.xml
+
+sed -e "s^xxENTITY_IDxx^`hostname`^g" -e "s^xxPROTOCOLxx^http^g" -e "s^xxHOST_NAMExx^`hostname`:8080^g" /opt/openam/templates/metadata/cats2.xml > /opensso-metadata/cats2.xml
+
+(noticed this /tomcat/webapps/opensso/WEB-INF/template/keystore/keystore.jks)
+
+java -jar /opt/openam/tools/Signer.jar /opensso-metadata/cats2.xml /opensso-metadata/cats2-signed.xml /opt/openam/ICM/keystore.jks idptest1_signing SHA256
 ```
 
 
-
-
-
-
-
-### Create User
-```shell
-useradd testmgr 
-passwd testmgr  
-SAMLTest1
-usermod -aG wheel testmgr  
 ```
+chown -R usr:usr  /dir
+find  /dir -type d -exec chmod 755 {} \;
+find /dir -type f -exec chmod 644 {} \;
 
-```shell
-mkdir /home/testmgr/tools
-mkdir /home/testmgr/opensso
-mkdir /home/testmgr/SSL
-
-cp /usr/lib/jvm/jre/lib/security/cacerts /home/testmgr/SSL/jssecacerts
-cp /opt/openam/openam/AM-SSOConfiguratorTools-5.1.2.5/openam-configurator-tool-14.1.2.5.jar /home/testmgr/tools/configurator.jar
-cp /opt/openam/openam/amconfig.txt /home/testmgr/tools/amconfig.txt (editfile)
-
-java -Dhttps.protocols=TLSv1 -Djavax.net.ssl.trustStore=${HOME}/SSL/jssecacerts -Djavax.net.ssl.trustStorePassword=changeit -jar /home/testmgr/tools/configurator.jar -f /home/testmgr/tools/amconfig.txt
-
-
-```
-
-
-
-
-### Set Home files
-```shell
-cp -r /opt/idp/idsim/home/testmgr/* /home/testmgr/
-chown -R testmgr:testmgr  /home/testmgr
-find  /usr/share/tomcat/opensso -type d -exec chmod 755 {} \;
-find /home/testmgr -type f -exec chmod 644 {} \;
-chmod 777 /home/testmgr/firstrun.sh
-```
-
-### Helpers
-```shell
-export JAVA_HOME="/usr/lib/jvm/java/jre"
-source ~/.bashrc
-echo $JAVA_HOME
-
-export CATALINA_OPTS="-Xmx1024m -XX:MaxPermSize=256m"
-
-
-journalctl -f -u tomcat
+journalctl -f -u 
 
 netstat -tulpn
 ```
 
-## Configs from ./firstrun
-
+## Configs
 ```shell
 [root@idp1 tmp]# cat amconfig.txt
      SERVER_URL=http://idp2.canadacentral.cloudapp.azure.com:8080
@@ -155,17 +119,20 @@ netstat -tulpn
 
 [root@idp1 tmp]# cat extensions.cnf
 subjectAltName=DNS:idp1.canadacentral.cloudapp.azure.com,DNS:.
+```
 
-[root@idp1 tmp]# cat ssoadm.bat
-     update-server-cfg -s http://idp1.canadacentral.cloudapp.azure.com:80/opensso -a com.iplanet.am.cookie.encode=true
-     update-server-cfg -s http://idp1.canadacentral.cloudapp.azure.com:80/opensso -a com.iplanet.am.cookie.secure=true
-     update-server-cfg -s http://idp1.canadacentral.cloudapp.azure.com:80/opensso -a ssoadm.disabled=false
-     set-attr-defs -s sunFAMFederationCommon -t global -a CheckCert=off
-     set-attr-defs -s sunFAMSAML2Configuration -t global -a bufferLength=4096
-     set-attr-defs -s sunFAMSAML2Configuration -t global -a IDPDiscoveryCookieDomain=.idpserver.canadacentral.cloudapp.azure.com
-     set-attr-defs -s sunFAMSAML2Configuration -t global -a IDPDiscoveryCookieType=SESSION
-     update-auth-instance --realm / --name DataStore --attributevalues sunAMAuthDataStoreAuthLevel=2
-     create-cot --cot GCCF --prefix http://idp1.idpserver.canadacentral.cloudapp.azure.com:80/idpdiscovery
-     import-entity --meta-data-file /home/testmgr/metadata/idsim.xml --extended-data-file /home/testmgr/metadata/idsim-extended.xml --cot GCCF
-     set-attr-defs -s sunFAMFederationCommon -t global -a SignatureAlgorithm=http://www.w3.org/2001/04/xmldsig-more#rsa-sha256
+
+```
+update-server-cfg -s http://idp3.canadacentral.cloudapp.azure.com:8080/opensso -a com.iplanet.am.cookie.encode=true
+update-server-cfg -s http://idp3.canadacentral.cloudapp.azure.com:8080/opensso -a com.iplanet.am.cookie.secure=true
+update-server-cfg -s http://idp3.canadacentral.cloudapp.azure.com:8080/opensso -a ssoadm.disabled=false
+set-attr-defs -s sunFAMFederationCommon -t global -a CheckCert=off
+set-attr-defs -s sunFAMSAML2Configuration -t global -a bufferLength=4096
+set-attr-defs -s sunFAMSAML2Configuration -t global -a IDPDiscoveryCookieDomain=.idp3.canadacentral.cloudapp.azure.com
+set-attr-defs -s sunFAMSAML2Configuration -t global -a IDPDiscoveryCookieType=SESSION
+update-auth-instance --realm / --name DataStore --attributevalues sunAMAuthDataStoreAuthLevel=2
+create-cot --cot GCCF --prefix http://idp3.canadacentral.cloudapp.azure.com:8080/idpdiscovery
+import-entity --meta-data-file /opensso-metadata/idsim.xml --extended-data-file /opensso-metadata/idsim-extended.xml --cot GCCF
+set-attr-defs -s sunFAMFederationCommon -t global -a SignatureAlgorithm=http://www.w3.org/2001/04/xmldsig-more#rsa-sha256
+
 ```
