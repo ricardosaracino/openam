@@ -20,19 +20,19 @@ cd /opt
 
 git clone https://github.com/ricardosaracino/openam.git
 
-cp -R /opt/openam/openam/apache-tomcat-8.0.35/ /tomcat
+cp -R /opt/openam/apache-tomcat-8.0.35/ /tomcat
 
 
 mkdir  /tomcat/webapps/opensso
 
-cp -R /opt/openam/openam/AM-eval-6.5.2/* /tomcat/webapps/opensso
+cp -R /opt/openam/AM-eval-6.5.2/* /tomcat/webapps/opensso
 
-cp /opt/openam/openam/IDPDiscovery-6.5.2.war /tomcat/webapps/idpdiscovery.war
-
-
+cp /opt/openam/IDPDiscovery-6.5.2.war /tomcat/webapps/idpdiscovery.war
 
 
-cp /opt/openam/openam/setenv.sh /tomcat/bin/
+
+
+cp /opt/openam/setenv.sh /tomcat/bin/
 
 chmod +x /tomcat/bin/*
 
@@ -40,7 +40,8 @@ mkdir /tomcat/logs
 
 cp /tomcat/conf/tomcat-users.xml /tomcat/conf/tomcat-users.xml.old
 
-cp /opt/openam/openam/tomcat-users.xml /tomcat/conf/tomcat-users.xml
+(edit pw)
+cp /opt/openam/tomcat-users.xml /tomcat/conf/tomcat-users.xml
 
 
 /tomcat/bin/startup.sh
@@ -52,7 +53,7 @@ amAdmin:SAMLTest1
 
 ```
 mkdir /opensso-admin-tools
-cp -R /opt/openam/openam/AM-SSOAdminTools-5.1.2.5/* /opensso-admin-tools
+cp -R /opt/openam/AM-SSOAdminTools-5.1.2.5/* /opensso-admin-tools
 chmod +x /opensso-admin-tools/setup
 
 export JAVA_HOME="/usr/lib/jvm/java"
@@ -87,11 +88,60 @@ java -jar /opt/openam/tools/Signer.jar /opensso-metadata/cats2.xml /opensso-meta
 
 ```
 
-/opensso-admin-tools/opensso/bin
+echo "SAMLTest1" > /tmp/adminpw
+chmod 400 /tmp/adminpw
+
+cd /opensso-admin-tools/opensso/bin/
+
+(edit host)
+./ssoadm do-batch --adminid amadmin --password-file /tmp/adminpw --batchfile cat /opt/openam/openssoadm.conf
+
+
+
+The configuration of http://idp3.canadacentral.cloudapp.azure.com:8080/opensso was updated.
+
+The configuration of http://idp3.canadacentral.cloudapp.azure.com:8080/opensso was updated.
+
+Update succeeded with unknown property values.
+
+The configuration of http://idp3.canadacentral.cloudapp.azure.com:8080/opensso was updated.
+
+Schema attribute defaults were set.
+
+Schema attribute defaults were set.
+
+Schema attribute defaults were set.
+
+Schema attribute defaults were set.
+
+Authentication Instance was updated.
+
+Circle of trust, GCCF was created.
+
+Import file, /opensso-metadata/idsim.xml.
+Import file, /opensso-metadata/idsim-extended.xml.
+
+Schema attribute defaults were set.
 
 ```
 
 
+
+```
+
+
+ln -s -f ${HOME}/metadata/cats2-signed.xml ${HOME}/tomcat/webapps/ROOT/cats2-signed.xml
+ln -s -f ${HOME}/tomcat/logs/catalina-daemon.out ${HOME}/tomcat/webapps/ROOT/catalina-daemon.out
+touch ${HOME}/opensso/opensso/log/SAML2.access
+ln -s -f ${HOME}/opensso/opensso/log/SAML2.access ${HOME}/tomcat/webapps/ROOT/SAML2.access
+touch ${HOME}/opensso/opensso/log/SAML2.error
+ln -s -f ${HOME}/opensso/opensso/log/SAML2.error ${HOME}/tomcat/webapps/ROOT/SAML2.error
+touch ${HOME}/opensso/opensso/debug/Federation
+ln -s -f ${HOME}/opensso/opensso/debug/Federation ${HOME}/tomcat/webapps/ROOT/Federation
+ln -s -f ${HOME}/SSL/tomcat.p12 ${HOME}/tomcat/webapps/ROOT/tomcat.p12
+ln -s -f ${HOME}/SSL/tomcat.crt ${HOME}/tomcat/webapps/ROOT/tomcat.crt
+
+```
 
 
 ```

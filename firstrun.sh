@@ -70,88 +70,84 @@
      echo "You must specify either SHA1 or SHA256"
   done
 
-#  echo "Do you want to disable TLS and configure for regular HTTP instead of HTTPS?"
-#  while true
-#  do
-#     read -p " => " -e -i "NO" SSL
-#     if [[ "${SSL}" = "NO" ]] ; then
-#        PROTOCOL="https"
-#        PORT="443"
-#        cp ${HOME}/templates/tomcat/server-tls.xml ${HOME}/tomcat/conf/server.xml
-#        break
-#     fi
-#     if [[ "${SSL}" = "YES" ]] ; then
-#        PROTOCOL="http"
-#        PORT="80"
-#        cp ${HOME}/templates/tomcat/server-notls.xml ${HOME}/tomcat/conf/server.xml
-#        break
-#     fi
-#     echo "You must specify either YES or NO"
-#  done
-#  shopt -u nocasematch
-
-  PROTOCOL="http"
-  PORT="80"
+  echo "Do you want to disable TLS and configure for regular HTTP instead of HTTPS?"
+  while true
+  do
+     read -p " => " -e -i "NO" SSL
+     if [[ "${SSL}" = "NO" ]] ; then
+        PROTOCOL="https"
+        PORT="443"
+        cp ${HOME}/templates/tomcat/server-tls.xml ${HOME}/tomcat/conf/server.xml
+        break
+     fi
+     if [[ "${SSL}" = "YES" ]] ; then
+        PROTOCOL="http"
+        PORT="80"
+        cp ${HOME}/templates/tomcat/server-notls.xml ${HOME}/tomcat/conf/server.xml
+        break
+     fi
+     echo "You must specify either YES or NO"
+  done
+  shopt -u nocasematch
 
   echo "Creating local trusted SSL keystore..."
   rm -rf ${HOME}/SSL
   mkdir ${HOME}/SSL
   cp ${JAVA_HOME}/jre/lib/security/cacerts  ${HOME}/SSL/jssecacerts
-  
+
   # Keep files private
   umask 077
 
-#  if [ "${PROTOCOL}" = "https" ] ; then
-#     echo "Creating a self-signed SSL certificate..."
-#
-#     # Generate 2048-bit RSA private key
-#     openssl genrsa -out ${HOME}/SSL/private.key 2048
-#
-#     # Generate certificate request
-#     openssl req -new -key ${HOME}/SSL/private.key -out ${HOME}/SSL/tomcat.csr -subj "/CN=${FQDN}"
-#
-#     # Create self-signed certificate including extensions for the GCCF common domain
-#     echo "subjectAltName=DNS:${FQDN},DNS:${CDHOSTNAME}.${COMMONDOMAIN}" > /tmp/extensions.cnf
-#     openssl x509 -req -days 365 -sha256 -in ${HOME}/SSL/tomcat.csr -signkey ${HOME}/SSL/private.key \
-#        	-extfile /tmp/extensions.cnf -out ${HOME}/SSL/tomcat.crt
-#     rm -f /tmp/extensions.cnf
-#
-#     # Package into a PKCS#12 file
-#     openssl pkcs12 -export -in ${HOME}/SSL/tomcat.crt -inkey ${HOME}/SSL/private.key \
-#	 -out ${HOME}/SSL/tomcat.p12 -name tomcat -passout pass:secret
-#
-#     # Add as a trusted certificate
-#     echo "Adding to local trusted SSL keystore..."
-#     cp ${JAVA_HOME}/jre/lib/security/cacerts  ${HOME}/SSL/jssecacerts
-#     ${JAVA_HOME}/bin/keytool -delete -alias ${FQDN} \
-#                           -keystore ${HOME}/SSL/jssecacerts -storepass changeit -noprompt 2>&1 >/dev/null
-#     ${JAVA_HOME}/bin/keytool -importcert -alias "${FQDN}" -file ${HOME}/SSL/tomcat.crt \
-#                           -keystore ${HOME}/SSL/jssecacerts -storepass changeit -noprompt
-#  fi
-   
-   
+  if [ "${PROTOCOL}" = "https" ] ; then
+     echo "Creating a self-signed SSL certificate..."
+
+     # Generate 2048-bit RSA private key
+     openssl genrsa -out ${HOME}/SSL/private.key 2048
+
+     # Generate certificate request
+     openssl req -new -key ${HOME}/SSL/private.key -out ${HOME}/SSL/tomcat.csr -subj "/CN=${FQDN}"
+
+     # Create self-signed certificate including extensions for the GCCF common domain
+     echo "subjectAltName=DNS:${FQDN},DNS:${CDHOSTNAME}.${COMMONDOMAIN}" > /tmp/extensions.cnf
+     openssl x509 -req -days 365 -sha256 -in ${HOME}/SSL/tomcat.csr -signkey ${HOME}/SSL/private.key \
+        	-extfile /tmp/extensions.cnf -out ${HOME}/SSL/tomcat.crt
+     rm -f /tmp/extensions.cnf
+
+     # Package into a PKCS#12 file
+     openssl pkcs12 -export -in ${HOME}/SSL/tomcat.crt -inkey ${HOME}/SSL/private.key \
+	 -out ${HOME}/SSL/tomcat.p12 -name tomcat -passout pass:secret
+
+     # Add as a trusted certificate
+     echo "Adding to local trusted SSL keystore..."
+     cp ${JAVA_HOME}/jre/lib/security/cacerts  ${HOME}/SSL/jssecacerts
+     ${JAVA_HOME}/bin/keytool -delete -alias ${FQDN} \
+                           -keystore ${HOME}/SSL/jssecacerts -storepass changeit -noprompt 2>&1 >/dev/null
+     ${JAVA_HOME}/bin/keytool -importcert -alias "${FQDN}" -file ${HOME}/SSL/tomcat.crt \
+                           -keystore ${HOME}/SSL/jssecacerts -storepass changeit -noprompt
+  fi
+
+
   # Configure OpenAM
 
-#  if [ -e ${HOME}/tomcat/webapps/opensso ] ; then
-#     echo "Removing old OpenAM configuration..."
-#     sudo /sbin/service tomcat stop
-#     rm -rf ${HOME}/opensso
-#     rm -rf ${HOME}/.openssocfg
-#     rm -rf ${HOME}/tomcat/work/*
-#     rm -rf ${HOME}/tomcat/logs/*
-#     rm -rf ${HOME}/tomcat/temp/*
-#     rm -rf ${HOME}/tomcat/webapps/opensso
-#     rm -rf ${HOME}/tomcat/webapps/idpdiscovery
-#     rm -rf ${HOME}/tomcat/webapps/LCS
-#  fi
+  if [ -e ${HOME}/tomcat/webapps/opensso ] ; then
+     echo "Removing old OpenAM configuration..."
+     sudo /sbin/service tomcat stop
+     rm -rf ${HOME}/opensso
+     rm -rf ${HOME}/.openssocfg
+     rm -rf ${HOME}/tomcat/work/*
+     rm -rf ${HOME}/tomcat/logs/*
+     rm -rf ${HOME}/tomcat/temp/*
+     rm -rf ${HOME}/tomcat/webapps/opensso
+     rm -rf ${HOME}/tomcat/webapps/idpdiscovery
+     rm -rf ${HOME}/tomcat/webapps/LCS
+  fi
 
+  echo "Starting Tomcat..."
+  sudo /sbin/chkconfig --levels 3 tomcat on
+  sudo /sbin/service tomcat start
 
-#  echo "Starting Tomcat..."
-#  sudo /sbin/chkconfig --levels 3 tomcat on
-#  sudo /sbin/service tomcat start
-#
-#  echo "Installing custom GC login page..."
-#  unzip -q -o -d ${HOME}/tomcat/webapps/opensso ${HOME}/templates/ui.zip
+  echo "Installing custom GC login page..."
+  unzip -q -o -d ${HOME}/tomcat/webapps/opensso ${HOME}/templates/ui.zip
 
   echo "Performing base OpenAM Server Configuration..."
 
@@ -237,7 +233,7 @@
                    --cot GCCF \
   " > /tmp/ssoadm.bat
 
-  if [ "${SIGALG}" = "SHA256" ] ; then 
+  if [ "${SIGALG}" = "SHA256" ] ; then
 	  echo -e "\
      set-attr-defs -s sunFAMFederationCommon -t global \
         -a SignatureAlgorithm=http://www.w3.org/2001/04/xmldsig-more#rsa-sha256\n" \
@@ -251,7 +247,7 @@
 
    echo "Setting up links on the welcome page..."
    ln -s -f ${HOME}/metadata/cats2-signed.xml ${HOME}/tomcat/webapps/ROOT/cats2-signed.xml
-#   ln -s -f ${HOME}/tomcat/logs/catalina-daemon.out ${HOME}/tomcat/webapps/ROOT/catalina-daemon.out
+   ln -s -f ${HOME}/tomcat/logs/catalina-daemon.out ${HOME}/tomcat/webapps/ROOT/catalina-daemon.out
    touch ${HOME}/opensso/opensso/log/SAML2.access
    ln -s -f ${HOME}/opensso/opensso/log/SAML2.access ${HOME}/tomcat/webapps/ROOT/SAML2.access
    touch ${HOME}/opensso/opensso/log/SAML2.error
