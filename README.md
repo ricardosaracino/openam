@@ -29,6 +29,10 @@ cp -R /opt/openam/AM-eval-6.5.2/* /tomcat/webapps/opensso
 
 cp /opt/openam/IDPDiscovery-6.5.2.war /tomcat/webapps/idpdiscovery.war
 
+mkdir  /tomcat/webapps/gccf
+
+cp -R /opt/openam/gccf/* /tomcat/webapps/gccf
+
 
 
 
@@ -45,9 +49,9 @@ cp /opt/openam/tomcat-users.xml /tomcat/conf/tomcat-users.xml
 
 
 /tomcat/bin/startup.sh
+/tomcat/bin/shutdown.sh
 
-
-amAdmin:SAMLTest1
+amadmin:SAMLTest1
 ```
 
 
@@ -125,22 +129,18 @@ Schema attribute defaults were set.
 
 ```
 
+##### ERROR: AuthUtils:getAuthContext(): Invalid Session Timed out
+https://forum.forgerock.com/topic/loggin-issue/
 
 
 ```
-
-
-ln -s -f /opensso-metadata/cats2-signed.xml /tomcat/webapps/ROOT/cats2-signed.xml
-ln -s -f ${HOME}/tomcat/logs/catalina-daemon.out ${HOME}/tomcat/webapps/ROOT/catalina-daemon.out
-touch ${HOME}/opensso/opensso/log/SAML2.access
-ln -s -f ${HOME}/opensso/opensso/log/SAML2.access ${HOME}/tomcat/webapps/ROOT/SAML2.access
-touch ${HOME}/opensso/opensso/log/SAML2.error
-ln -s -f ${HOME}/opensso/opensso/log/SAML2.error ${HOME}/tomcat/webapps/ROOT/SAML2.error
-touch ${HOME}/opensso/opensso/debug/Federation
-ln -s -f ${HOME}/opensso/opensso/debug/Federation ${HOME}/tomcat/webapps/ROOT/Federation
-ln -s -f ${HOME}/SSL/tomcat.p12 ${HOME}/tomcat/webapps/ROOT/tomcat.p12
-ln -s -f ${HOME}/SSL/tomcat.crt ${HOME}/tomcat/webapps/ROOT/tomcat.crt
-
+ln -s -f /opensso-metadata/cats2-signed.xml /tomcat/webapps/gccf/cats2-signed.xml
+ln -s -f /tomcat/logs/catalina.out /tomcat/webapps/gccf/catalina-daemon.out
+touch /opensso/opensso/log/SAML2.access
+ln -s -f /opensso/opensso/log/SAML2.access /tomcat/webapps/ROOT/SAML2.access
+touch /opensso/opensso/log/SAML2.error
+ln -s -f /opensso/opensso/log/SAML2.error /tomcat/webapps/ROOT/SAML2.error
+ln -s -f /opensso/opensso/debug/Federation /tomcat/webapps/ROOT/Federation
 ```
 
 
@@ -187,11 +187,20 @@ update-server-cfg -s http://idp3.canadacentral.cloudapp.azure.com:8080/opensso -
 update-server-cfg -s http://idp3.canadacentral.cloudapp.azure.com:8080/opensso -a ssoadm.disabled=false
 set-attr-defs -s sunFAMFederationCommon -t global -a CheckCert=off
 set-attr-defs -s sunFAMSAML2Configuration -t global -a bufferLength=4096
-set-attr-defs -s sunFAMSAML2Configuration -t global -a IDPDiscoveryCookieDomain=.idp3.canadacentral.cloudapp.azure.com
+set-attr-defs -s sunFAMSAML2Configuration -t global -a IDPDiscoveryCookieDomain=idp3.canadacentral.cloudapp.azure.com
 set-attr-defs -s sunFAMSAML2Configuration -t global -a IDPDiscoveryCookieType=SESSION
 update-auth-instance --realm / --name DataStore --attributevalues sunAMAuthDataStoreAuthLevel=2
 create-cot --cot GCCF --prefix http://idp3.canadacentral.cloudapp.azure.com:8080/idpdiscovery
 import-entity --meta-data-file /opensso-metadata/idsim.xml --extended-data-file /opensso-metadata/idsim-extended.xml --cot GCCF
 set-attr-defs -s sunFAMFederationCommon -t global -a SignatureAlgorithm=http://www.w3.org/2001/04/xmldsig-more#rsa-sha256
+
+```
+
+
+
+```
+
+
+{"realm":"/","transactionId":"f1766131-a99e-4df7-a6ad-885c337d5352-4014","component":"Authentication","eventName":"AM-LOGIN-MODULE-COMPLETED","result":"SUCCESSFUL","entries":[{"moduleId":"DataStore","info":{"authControlFlag":"REQUIRED","moduleClass":"DataStore","ipAddress":"52.237.21.105","authLevel":"0"}}],"principal":["amadmin"],"timestamp":"2019-07-23T18:06:57.505Z","trackingIds":["f1766131-a99e-4df7-a6ad-885c337d5352-3943"],"_id":"f1766131-a99e-4df7-a6ad-885c337d5352-4052"}
 
 ```

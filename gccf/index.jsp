@@ -410,7 +410,7 @@
 
 <!-- clf2-nsi2 theme begins / Début du thème clf2-nsi2 -->
 		<p>
-			If you are seeing this you have sucessfully started the IDP Simulator.
+			If you are seeing this you have successfully started the IDP Simulator.
 		</p>
 		<section>
 		<header>
@@ -455,14 +455,15 @@
 			<section>
 				<h3>Admin Consoles</h3>
 				<ul>
-					<li><a href="opensso/">OpenAM</a></li>
-					<li><a href="manager/">Apache Tomcat</a></li>
+					<li><a href="/opensso/">OpenAM</a></li>
+					<li><a href="/">Tomcat</a></li>
+					<li><a href="/manager/">Manager</a></li>
 				</ul>
 			</section>
 			<section>
 				<h3>IDP Functions</h3>
 				<ul>
-					<li><a href="opensso/saml2/jsp/idpSingleLogoutInit.jsp?binding=urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect">Single Logout</a></li>
+					<li><a href="/opensso/saml2/jsp/idpSingleLogoutInit.jsp?binding=urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" target="_blank">Single Logout</a></li>
 				</ul>
 			</section>
 			<section>
