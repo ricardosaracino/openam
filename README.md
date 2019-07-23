@@ -6,6 +6,67 @@
 
 [openam 11.0.3](https://github.com/ForgeRock/openam-community-edition/releases)
 
+
+
+```
+systemctl stop firewalld
+hostnamectl set-hostname idp3.canadacentral.cloudapp.azure.com
+
+yum update 
+yum install git unzip alternatives java-1.7.0-openjdk-devel -y
+
+
+
+
+cd /opt 
+
+git clone https://github.com/ricardosaracino/openam.git
+
+cp -R /opt/openam/openam/apache-tomcat-8.0.35/ /tomcat
+
+
+mkdir  /tomcat/webapps/opensso
+
+cp -r /opt/openam/openam/AM-eval-6.5.2/* /tomcat/webapps/opensso
+
+cp /opt/openam/openam/IDPDiscovery-6.5.2.war /tomcat/webapps/idpdiscovery.war
+
+
+
+
+cp /opt/openam/openam/setenv.sh /tomcat/bin/
+
+chmod +x /tomcat/bin/*
+
+mkdir /tomcat/logs
+
+cp /tomcat/conf/tomcat-users.xml /tomcat/conf/tomcat-users.xml.old
+
+vi /tomcat/conf/tomcat-users.xml
+
+
+/tomcat/bin/startup.sh
+
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### Install
 ```shell
 yum update 
@@ -16,45 +77,17 @@ yum install maven
 yum install alternatives
 yum install unzip
 yum install git
-
-yum install java-1.8.0-openjdk-devel
 yum install java-1.7.0-openjdk-devel
 yum install java-1.6.0-openjdk-devel
 
+yum update 
+yum install git
+yum install unzip
+yum install java-1.8.0-openjdk-devel
+yum install alternatives
+
 alternatives --config java
 ```
-
-
-```
-mv /opt/openam/tomcat .. /tomcat
-
-chmod +x /tomcat/bin/*
-
-cp -r /opt/openam/openam/AM-eval-6.5.2/AM-eval-6.5.2/* /tomcat/webapps/opensso
-
-cp /opt/openam/openam/IDPDiscovery-6.5.2.war /tomcat/webapps/idpdiscovery.war
-
-cp /tomcat/conf/tomcat-users.xml /tomcat/conf/tomcat-users.xml.old
-
-cp /opt/openam/tomcat/conf/tomcat-users.xml /usr/share/tomcat/conf/
-
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -179,7 +212,7 @@ netstat -tulpn
 
 ```shell
 [root@idp1 tmp]# cat amconfig.txt
-     SERVER_URL=http://idp1.canadacentral.cloudapp.azure.com:8080
+     SERVER_URL=http://idp2.canadacentral.cloudapp.azure.com:8080
      DEPLOYMENT_URI=/opensso
      BASE_DIR=/home/testmgr/opensso
      locale=en_US
@@ -187,10 +220,10 @@ netstat -tulpn
      AM_ENC_KEY=SAMLTest1
      ADMIN_PWD=SAMLTest1
      AMLDAPUSERPASSWD=SAMLTest2
-     COOKIE_DOMAIN=idp1.canadacentral.cloudapp.azure.com
+     COOKIE_DOMAIN=idp2.canadacentral.cloudapp.azure.com
      DATA_STORE=embedded
      DIRECTORY_SSL=SIMPLE
-     DIRECTORY_SERVER=idp1.canadacentral.cloudapp.azure.com
+     DIRECTORY_SERVER=idp2.canadacentral.cloudapp.azure.com
      DIRECTORY_PORT=50389
      DIRECTORY_ADMIN_PORT=4444
      DIRECTORY_JMX_PORT=1689
