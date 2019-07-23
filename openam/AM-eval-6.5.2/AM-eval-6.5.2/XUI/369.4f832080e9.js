@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([[369],{1495:function(e,t,n){var a=n(62);e.exports=(a["default"]||a).template({compiler:[7,">= 4.0.0"],main:function(e,t,n,a,l){return'<button id="deleteLabel" type="button" class="btn btn-default" disabled>\n    <i class="fa fa-ban"></i> '+e.escapeExpression((n.t||t&&t.t||n.helperMissing).call(null!=t?t:e.nullContext||{},"uma.resources.myLabels.deleteLabel.button",{name:"t",hash:{},data:l}))+"\n</button>\n"},useData:true})}}]);
-//# sourceMappingURL=369.4f832080e9.js.map

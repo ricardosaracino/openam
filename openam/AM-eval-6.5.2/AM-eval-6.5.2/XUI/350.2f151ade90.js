@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([[350],{1167:function(n,a,i){var o=i(62);n.exports=(o["default"]||o).template({compiler:[7,">= 4.0.0"],main:function(n,a,i,o,t){return'<nav id="backlink"></nav>\n<div class="container" data-global-configuration></div>\n'},useData:true})}}]);
-//# sourceMappingURL=350.2f151ade90.js.map

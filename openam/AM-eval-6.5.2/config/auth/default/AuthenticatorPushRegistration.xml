@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright 2016-2018 ForgeRock AS. All Rights Reserved
+ 
+  Use of this code requires a commercial software license with ForgeRock AS.
+  or with one of its affiliates. All use shall be exclusively subject
+  to such license between the licensee and ForgeRock AS.
+-->
+
+<!DOCTYPE ModuleProperties PUBLIC "=//iPlanet//Authentication Module Properties XML Interface 1.0 DTD//EN"
+        "jar://com/sun/identity/authentication/Auth_Module_Properties.dtd">
+
+<ModuleProperties moduleName="AuthenticatorPushRegistration" version="1.0" >
+    <!-- LOGIN_START -->
+    <Callbacks length="0" order="1" timeout="120" header="ForgeRock Authenticator (Push) Registration">
+    </Callbacks>
+    <!-- OPTIONS_PAGE -->
+    <!-- For when we're skippable -->
+    <Callbacks length="1" order="2" timeout="120" header="ForgeRock Authenticator (Push) Registration">
+        <ConfirmationCallback>
+            <OptionValues>
+                <OptionValue>
+                    <Value>Register Device</Value>
+                </OptionValue>
+                <OptionValue>
+                    <Value>Get the App</Value>
+                </OptionValue>
+                <OptionValue>
+                    <Value>Skip this step</Value>
+                </OptionValue>
+            </OptionValues>
+        </ConfirmationCallback>
+    </Callbacks>
+    <!-- GET_THE_APP_INFO_PAGE -->
+    <!-- For links to app store, skippable version -->
+    <Callbacks length="3" order="3" timeout="120" header="ForgeRock Authenticator (Push) Registration">
+        <TextOutputCallback>#REPLACE#</TextOutputCallback>
+        <TextOutputCallback>#REPLACE#</TextOutputCallback>
+        <ConfirmationCallback>
+            <OptionValues>
+                <OptionValue>
+                    <Value>Continue</Value>
+                </OptionValue>
+                <OptionValue>
+                    <Value>Skip this step</Value>
+                </OptionValue>
+            </OptionValues>
+        </ConfirmationCallback>
+    </Callbacks>
+    <!-- WAIT_FOR_RESPONSE_FROM_QR_SCAN -->
+    <Callbacks length="3" order="4" timeout="120" header="Register a device">
+        <TextOutputCallback>
+            Scan the barcode image below with the ForgeRock Authenticator app to register your device with your login.
+        </TextOutputCallback>
+        <TextOutputCallback messageType="script">#PLACEHOLDER#</TextOutputCallback>
+        <PollingWaitCallback waitTime="10000"/>
+    </Callbacks>
+    <!-- CONFIRMATION -->
+    <!-- Display recovery code -->
+    <Callbacks length="11" order="5" timeout="120" header="ForgeRock Authenticator (Push) Recovery Codes">
+        <TextOutputCallback>PLACEHOLDER</TextOutputCallback>
+        <TextOutputCallback>PLACEHOLDER</TextOutputCallback>
+        <TextOutputCallback>PLACEHOLDER</TextOutputCallback>
+        <TextOutputCallback>PLACEHOLDER</TextOutputCallback>
+        <TextOutputCallback>PLACEHOLDER</TextOutputCallback>
+        <TextOutputCallback>PLACEHOLDER</TextOutputCallback>
+        <TextOutputCallback>PLACEHOLDER</TextOutputCallback>
+        <TextOutputCallback>PLACEHOLDER</TextOutputCallback>
+        <TextOutputCallback>PLACEHOLDER</TextOutputCallback>
+        <TextOutputCallback>PLACEHOLDER</TextOutputCallback>
+        <ConfirmationCallback>
+            <OptionValues>
+                <OptionValue>
+                    <Value>Continue</Value>
+                </OptionValue>
+            </OptionValues>
+        </ConfirmationCallback>
+    </Callbacks>
+    <!-- OPTIONS_PAGE -->
+    <!-- For when we're not skippable -->
+    <Callbacks length="1" order="6" timeout="120" header="ForgeRock Authenticator (Push) Registration">
+        <ConfirmationCallback>
+            <OptionValues>
+                <OptionValue>
+                    <Value>Register Device</Value>
+                </OptionValue>
+                <OptionValue>
+                    <Value>Get the App</Value>
+                </OptionValue>
+            </OptionValues>
+        </ConfirmationCallback>
+    </Callbacks>
+    <!-- GET_THE_APP_INFO_PAGE -->
+    <!-- For links to app store, non-skippable version -->
+    <Callbacks length="3" order="7" timeout="120" header="ForgeRock Authenticator (Push) Registration">
+        <TextOutputCallback>#REPLACE#</TextOutputCallback>
+        <TextOutputCallback>#REPLACE#</TextOutputCallback>
+        <ConfirmationCallback>
+            <OptionValues>
+                <OptionValue>
+                    <Value>Continue</Value>
+                </OptionValue>
+            </OptionValues>
+        </ConfirmationCallback>
+    </Callbacks>
+</ModuleProperties>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+   Copyright (c) 2002-2010 Sun Microsystems Inc. All Rights Reserved
+
+   The contents of this file are subject to the terms
+   of the Common Development and Distribution License
+   (the License). You may not use this file except in
+   compliance with the License.
+
+   You can obtain a copy of the License at
+   https://opensso.dev.java.net/public/CDDLv1.0.html or
+   opensso/legal/CDDLv1.0.txt
+   See the License for the specific language governing
+   permission and limitations under the License.
+
+   When distributing Covered Code, include this CDDL
+   Header Notice in each file and include the License file
+   at opensso/legal/CDDLv1.0.txt.
+   If applicable, add the following below the CDDL Header,
+   with the fields enclosed by brackets [] replaced by
+   your own identifying information:
+   "Portions Copyrighted [year] [name of copyright owner]"
+
+   Portions Copyrighted 2010-2017 ForgeRock AS.
+-->
+<click-app charset="UTF-8">
+    <pages package="com.sun.identity">
+        <!-- the following are all the URL patterns that exist in the OpenSSO
+             .war, but are NOT handled by click.  They are, for all intents and
+             purposes, pretty much everything _except_ the config GUI at this
+             time.
+
+             The config GUI resides under $requestContext/config/ with
+             two notable exceptions:
+
+             There are two paths that existed in the project prior
+             to Click being introduced, under the urls:
+
+             $requestContextPath/config/federation/*  and
+             $requestContextPath/config/auth/default/*
+
+             To ensure there are no interference with them, they have also been
+             added to the list of excludes. -->
+        <excludes pattern="/Debug.jsp, /amadm.jsp, /com_sun_web_ui/*, /config/auth/default/*, /config/federation/*, /console/*, /encode.jsp, /ssoadm.jsp, /isAlive.jsp, /password/*, /saml2/*, /samples/*, /success.jsp, /wsfederation/*"/>
+    </pages>
+    <mode value="production"/>
+</click-app>

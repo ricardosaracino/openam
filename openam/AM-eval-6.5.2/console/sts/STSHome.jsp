@@ -1,0 +1,107 @@
+<%--
+  Copyright 2014-2017 ForgeRock AS. All Rights Reserved
+ 
+  Use of this code requires a commercial software license with ForgeRock AS.
+  or with one of its affiliates. All use shall be exclusively subject
+  to such license between the licensee and ForgeRock AS.
+--%>
+
+
+
+
+<%@ page info="Services" language="java" %>
+<%@taglib uri="/WEB-INF/jato.tld" prefix="jato" %>
+<%@taglib uri="/WEB-INF/cc.tld" prefix="cc" %>
+<jato:useViewBean
+        className="com.sun.identity.console.sts.STSHomeViewBean"
+        fireChildDisplayEvents="true" >
+
+    <cc:i18nbundle baseName="amConsole" id="amConsole"
+                   locale="<%=((com.sun.identity.console.base.AMViewBeanBase)viewBean).getUserLocale()%>"/>
+
+    <cc:header name="hdrCommon" pageTitle="webconsole.title" bundleID="amConsole" copyrightYear="2004" fireDisplayEvents="true">
+
+        <script language="javascript" src="../console/js/am.js"></script>
+
+        <cc:form name="STSHome" method="post" defaultCommandChild="/tblButtonAdd">
+            <jato:hidden name="szCache" />
+
+            <script language="javascript">
+                function confirmLogout() {
+                    return confirm("<cc:text name="txtLogout" defaultValue="masthead.logoutMessage" bundleID="amConsole"/>");
+                }
+            </script>
+            <cc:primarymasthead name="mhCommon" bundleID="amConsole"  logoutOnClick="return confirmLogout();" locale="<%=((com.sun.identity.console.base.AMViewBeanBase)viewBean).getUserLocale()%>"/>
+            <cc:breadcrumbs name="breadCrumb" bundleID="amConsole" />
+
+            <cc:tabs name="tabCommon" bundleID="amConsole" />
+
+            <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                <tr>
+                    <td>
+                        <cc:alertinline name="ialertCommon" bundleID="amConsole" />
+                    </td>
+                </tr>
+            </table>
+
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td align="left">
+                        <cc:breadcrumbs name="parentagepath" bundleID="amConsole" />
+                        <div class="BcmWhtDiv">
+                            <cc:text name="txtRoot" bundleID="amConsole" />
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <%-- PAGE CONTENT --------------------------------------------------------- --%>
+            <cc:pagetitle
+                    name="pgtitle"
+                    bundleID="amConsole"
+                    pageTitleText="rest.sts.home.page.title"
+                    showPageTitleSeparator="true"
+                    viewMenuLabel=""
+                    pageTitleHelpMessage=""
+                    showPageButtonsTop="true"
+                    showPageButtonsBottom="false" />
+
+            <cc:spacer name="spacer" height="10" newline="true" />
+
+            <cc:actiontable
+                    name="tblRestSTSInstances"
+                    title="rest.sts.home.instances.table.name"
+                    bundleID="amConsole"
+                    summary="rest.sts.home.instances.table.summary"
+                    empty="rest.sts.home.instances.table.empty.message"
+                    selectionType="multiple"
+                    showAdvancedSortingIcon="false"
+                    showLowerActions="false"
+                    showPaginationControls="false"
+                    showPaginationIcon="false"
+                    showSelectionIcons="true"
+                    selectionJavascript="toggleTblButtonState('STSHome', 'STSHome.tblRestSTSInstances', 'tblButton', 'STSHome.tblRestSTSInstancesButtonDelete', this)"
+                    showSelectionSortIcon="false"
+                    showSortingRow="false" />
+
+            <cc:spacer name="spacer" height="15" newline="true" />
+
+            <cc:actiontable
+                    name="tblSoapSTSInstances"
+                    title="soap.sts.home.instances.table.name"
+                    bundleID="amConsole"
+                    summary="soap.sts.home.instances.table.summary"
+                    empty="soap.sts.home.instances.table.empty.message"
+                    selectionType="multiple"
+                    showAdvancedSortingIcon="false"
+                    showLowerActions="false"
+                    showPaginationControls="false"
+                    showPaginationIcon="false"
+                    showSelectionIcons="true"
+                    selectionJavascript="toggleTblButtonState('STSHome', 'STSHome.tblSoapSTSInstances', 'tblButton', 'STSHome.tblSoapSTSInstancesButtonDelete', this)"
+                    showSelectionSortIcon="false"
+                    showSortingRow="false" />
+        </cc:form>
+
+    </cc:header>
+</jato:useViewBean>

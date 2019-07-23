@@ -17,23 +17,46 @@ yum install alternatives
 yum install unzip
 yum install git
 
-
-yum install java-1.8.0-openjdk
+yum install java-1.8.0-openjdk-devel
 yum install java-1.7.0-openjdk-devel
 yum install java-1.6.0-openjdk-devel
 
-
-rpm -ivh jdk-8u80-linux-x64.rpm
-
-
-cd /opt/
-wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u79-b15/jdk-7u79-linux-x64.tar.gz"
-tar xzf jdk-7u79-linux-x64.tar.gz
-
-cd /opt/jdk1.7.0_79/
-alternatives --install /usr/bin/java java /opt/jdk1.7.0_79/bin/java 2
 alternatives --config java
 ```
+
+
+```
+mv /opt/openam/tomcat .. /tomcat
+
+chmod +x /tomcat/bin/*
+
+cp -r /opt/openam/openam/AM-eval-6.5.2/AM-eval-6.5.2/* /tomcat/webapps/opensso
+
+cp /opt/openam/openam/IDPDiscovery-6.5.2.war /tomcat/webapps/idpdiscovery.war
+
+cp /tomcat/conf/tomcat-users.xml /tomcat/conf/tomcat-users.xml.old
+
+cp /opt/openam/tomcat/conf/tomcat-users.xml /usr/share/tomcat/conf/
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### Init
 ```
@@ -54,7 +77,7 @@ mv /usr/share/tomcat/webapps/ROOT /usr/share/tomcat/webapps/tomcat
 
 cp -r /opt/openam/tomcat/webapps/ROOT /usr/share/tomcat/webapps/ROOT
 
-cp /opt/openam/openam/OpenAM-Community-Edition-11.0.3.war /usr/share/tomcat/webapps/opensso.war
+cp -r /opt/openam/openam/AM-eval-6.5.2/AM-eval-6.5.2/* /usr/share/tomcat/webapps/opensso
 
 cp /opt/openam/openam/IDPDiscovery-6.5.2.war /usr/share/tomcat/webapps/idpdiscovery.war
 
@@ -63,11 +86,22 @@ cp /usr/share/tomcat/conf/tomcat-users.xml /usr/share/tomcat/conf/tomcat-users.x
 
 cp /opt/openam/tomcat/conf/tomcat-users.xml /usr/share/tomcat/conf/
 
-
 mkdir /usr/share/tomcat/opensso
 
 
+chown -R root:tomcat /usr/share/tomcat/webapps/
+find  /usr/share/tomcat/webapps/ -type d -exec chmod 775 {} \;
+find /usr/share/tomcat/webapps/ -type f -exec chmod 664 {} \;
+
 systemctl restart tomcat
+
+
+
+
+testmgr@idp1 AM-SSOAdminTools-5.1.2.5]$ ./setup
+
+
+
 ```
 
 ### Create User
@@ -93,8 +127,24 @@ java -Dhttps.protocols=TLSv1 -Djavax.net.ssl.trustStore=${HOME}/SSL/jssecacerts 
 ```
 
 
+### Running tomcat as root
+```
+https://access.redhat.com/documentation/en-US/Red_Hat_JBoss_Portal/6.1/html/Administration_and_Configuration_Guide/chap-OpenAM.html
+http://www.janua.fr/how-to-create-and-deploy-a-new-openam-tomcat-instance/
+https://bugster.forgerock.org/jira/browse/OPENAM-2859?jql=text%20~%20"opendj.zip%20(No%20such%20file%20or%20directory)"
 
+https://www.youtube.com/watch?v=5X1cWnMDtH0
 
+The file /lib/systemd/system/tomcat.service should not be changed. If you need to overwrite them, just copy the file to /etc/systemd/system/tomcat.service, and edit the /etc/systemd/system/tomcat.service file.
+
+After you change the file, ask systemd to reload the config:
+
+systemctl daemon-reload
+
+this didnt work
+
+javax.servlet.ServletException: An error occurred while processing this request. Contact your administrator. com.sun.identity.setup.AMSetupFilter.doFilter(AMSetupFilter.java:148) org.forgerock.openam.audit.context.AuditContextFilter.doFilter(AuditContextFilter.java:46)
+```
 
 
 
@@ -109,7 +159,7 @@ chmod 777 /home/testmgr/firstrun.sh
 
 ### Helpers
 ```shell
-export JAVA_HOME="/usr/lib/jvm/*version*/jre"
+export JAVA_HOME="/usr/lib/jvm/java/jre"
 source ~/.bashrc
 echo $JAVA_HOME
 
