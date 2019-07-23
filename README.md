@@ -2,8 +2,6 @@
 
 [openam files](https://github.com/ricardosaracino/openam)
 
-[openam git](https://github.com/ForgeRock/openam-community-edition)
-
 [openam 11.0.3](https://github.com/ForgeRock/openam-community-edition/releases)
 
 
@@ -13,8 +11,7 @@ systemctl stop firewalld
 hostnamectl set-hostname idp3.canadacentral.cloudapp.azure.com
 
 yum update 
-yum install git unzip alternatives java-1.7.0-openjdk-devel -y
-
+yum install git unzip alternatives java-1.8.0-openjdk-devel -y
 
 
 
@@ -27,7 +24,7 @@ cp -R /opt/openam/openam/apache-tomcat-8.0.35/ /tomcat
 
 mkdir  /tomcat/webapps/opensso
 
-cp -r /opt/openam/openam/AM-eval-6.5.2/* /tomcat/webapps/opensso
+cp -R /opt/openam/openam/AM-eval-6.5.2/* /tomcat/webapps/opensso
 
 cp /opt/openam/openam/IDPDiscovery-6.5.2.war /tomcat/webapps/idpdiscovery.war
 
@@ -42,12 +39,39 @@ mkdir /tomcat/logs
 
 cp /tomcat/conf/tomcat-users.xml /tomcat/conf/tomcat-users.xml.old
 
-vi /tomcat/conf/tomcat-users.xml
+cp /opt/openam/openam/tomcat-users.xml /tomcat/conf/tomcat-users.xml
 
 
 /tomcat/bin/startup.sh
 
 
+amAdmin:SAMLTest1
+
+
+
+```
+mkdir /opensso-admin-tools
+cp -R /opt/openam/openam/AM-SSOAdminTools-5.1.2.5/* /opensso-admin-tools
+chmod +x /opensso-admin-tools/setup
+
+export JAVA_HOME="/usr/lib/jvm/java"
+cd /opensso-admin-tools
+./setup
+
+Path to config files of OpenAM server [/root/openam]:/opensso
+Debug Directory [/opensso-admin-tools/debug]:
+Log Directory [/opensso-admin-tools/log]:
+The scripts are properly setup under directory: /opensso-admin-tools/opensso
+Debug directory is /opensso-admin-tools/debug.
+Log directory is /opensso-admin-tools/log.
+The version of this tools.zip is: OpenAM 14.1.2.5
+The version of your server instance is: ForgeRock Access Management 6.5.2 Build 314d553429 (2019-June-17 15:07)
+
+
+```
+
+```
+mkdir opensso-metadata
 
 
 ```
@@ -57,85 +81,6 @@ vi /tomcat/conf/tomcat-users.xml
 
 
 
-
-
-
-
-
-
-
-
-
-
-### Install
-```shell
-yum update 
-yum install java
-yum install tomcat
-yum install tomcat-admin-webapps
-yum install maven
-yum install alternatives
-yum install unzip
-yum install git
-yum install java-1.7.0-openjdk-devel
-yum install java-1.6.0-openjdk-devel
-
-yum update 
-yum install git
-yum install unzip
-yum install java-1.8.0-openjdk-devel
-yum install alternatives
-
-alternatives --config java
-```
-
-
-
-### Init
-```
-systemctl stop firewalld
-
-systemctl start tomcat
-systemctl status tomcat
-systemctl enable tomcat
-
-hostnamectl set-hostname idp1.canadacentral.cloudapp.azure.com
-
-alternatives --config java
-```
-
-
-```shell
-mv /usr/share/tomcat/webapps/ROOT /usr/share/tomcat/webapps/tomcat
-
-cp -r /opt/openam/tomcat/webapps/ROOT /usr/share/tomcat/webapps/ROOT
-
-cp -r /opt/openam/openam/AM-eval-6.5.2/AM-eval-6.5.2/* /usr/share/tomcat/webapps/opensso
-
-cp /opt/openam/openam/IDPDiscovery-6.5.2.war /usr/share/tomcat/webapps/idpdiscovery.war
-
-
-cp /usr/share/tomcat/conf/tomcat-users.xml /usr/share/tomcat/conf/tomcat-users.xml.old
-
-cp /opt/openam/tomcat/conf/tomcat-users.xml /usr/share/tomcat/conf/
-
-mkdir /usr/share/tomcat/opensso
-
-
-chown -R root:tomcat /usr/share/tomcat/webapps/
-find  /usr/share/tomcat/webapps/ -type d -exec chmod 775 {} \;
-find /usr/share/tomcat/webapps/ -type f -exec chmod 664 {} \;
-
-systemctl restart tomcat
-
-
-
-
-testmgr@idp1 AM-SSOAdminTools-5.1.2.5]$ ./setup
-
-
-
-```
 
 ### Create User
 ```shell
@@ -160,25 +105,6 @@ java -Dhttps.protocols=TLSv1 -Djavax.net.ssl.trustStore=${HOME}/SSL/jssecacerts 
 ```
 
 
-### Running tomcat as root
-```
-https://access.redhat.com/documentation/en-US/Red_Hat_JBoss_Portal/6.1/html/Administration_and_Configuration_Guide/chap-OpenAM.html
-http://www.janua.fr/how-to-create-and-deploy-a-new-openam-tomcat-instance/
-https://bugster.forgerock.org/jira/browse/OPENAM-2859?jql=text%20~%20"opendj.zip%20(No%20such%20file%20or%20directory)"
-
-https://www.youtube.com/watch?v=5X1cWnMDtH0
-
-The file /lib/systemd/system/tomcat.service should not be changed. If you need to overwrite them, just copy the file to /etc/systemd/system/tomcat.service, and edit the /etc/systemd/system/tomcat.service file.
-
-After you change the file, ask systemd to reload the config:
-
-systemctl daemon-reload
-
-this didnt work
-
-javax.servlet.ServletException: An error occurred while processing this request. Contact your administrator. com.sun.identity.setup.AMSetupFilter.doFilter(AMSetupFilter.java:148) org.forgerock.openam.audit.context.AuditContextFilter.doFilter(AuditContextFilter.java:46)
-```
-
 
 
 ### Set Home files
@@ -196,12 +122,8 @@ export JAVA_HOME="/usr/lib/jvm/java/jre"
 source ~/.bashrc
 echo $JAVA_HOME
 
-export JAVA_OPTS="-Dcom.iplanet.am.cookie.c66Encode=true -Djavax.net.ssl.trustStore=${HOME}/SSL/jssecacerts"
 export CATALINA_OPTS="-Xmx1024m -XX:MaxPermSize=256m"
 
-export FQDN="idp1.canadacentral.cloudapp.azure.com"
-export HOSTNAME=`echo ${FQDN} | cut -f 1 -d '.'`
-export DOMAINNAME=`expr ${FQDN} : "${HOSTNAME}\(\..*\)"`
 
 journalctl -f -u tomcat
 
@@ -214,7 +136,7 @@ netstat -tulpn
 [root@idp1 tmp]# cat amconfig.txt
      SERVER_URL=http://idp2.canadacentral.cloudapp.azure.com:8080
      DEPLOYMENT_URI=/opensso
-     BASE_DIR=/home/testmgr/opensso
+     BASE_DIR=/opensso
      locale=en_US
      PLATFORM_LOCALE=en_US
      AM_ENC_KEY=SAMLTest1
@@ -244,6 +166,6 @@ subjectAltName=DNS:idp1.canadacentral.cloudapp.azure.com,DNS:.
      set-attr-defs -s sunFAMSAML2Configuration -t global -a IDPDiscoveryCookieType=SESSION
      update-auth-instance --realm / --name DataStore --attributevalues sunAMAuthDataStoreAuthLevel=2
      create-cot --cot GCCF --prefix http://idp1.idpserver.canadacentral.cloudapp.azure.com:80/idpdiscovery
-     import-entity --meta-data-file /home/testmgr/metadata/idsim.xml --extended-data-file /home/testmgr/metadata/idsim-extended.xml                    --cot GCCF
+     import-entity --meta-data-file /home/testmgr/metadata/idsim.xml --extended-data-file /home/testmgr/metadata/idsim-extended.xml --cot GCCF
      set-attr-defs -s sunFAMFederationCommon -t global -a SignatureAlgorithm=http://www.w3.org/2001/04/xmldsig-more#rsa-sha256
 ```
