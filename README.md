@@ -86,6 +86,15 @@ java -jar /opt/openam/tools/Signer.jar /opensso-metadata/cats2.xml /opensso-meta
 
 
 ```
+
+/opensso-admin-tools/opensso/bin
+
+```
+
+
+
+
+```
 chown -R usr:usr  /dir
 find  /dir -type d -exec chmod 755 {} \;
 find /dir -type f -exec chmod 644 {} \;
