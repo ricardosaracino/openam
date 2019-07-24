@@ -60,9 +60,7 @@ cp /opt/openam/server.xml /tomcat/conf/server.xml
 amadmin:SAMLTest1
 ```
 
-
 ```
-
 (this could be a home dir)
 mkdir /opensso/
 
@@ -83,7 +81,6 @@ Login ID: cn=Directory Manager
 Password: SAMLTest2
 ```
 
-
 ```
 mkdir /opensso/ssoadm
 cp -R /opt/openam/AM-SSOAdminTools-5.1.2.5/* /opensso/ssoadm
@@ -102,7 +99,6 @@ Log directory is /opensso/ssoadm/log.
 The version of this tools.zip is: OpenAM 14.1.2.5
 The version of your server instance is: ForgeRock Access Management 6.5.2 Build 314d553429 (2019-June-17 15:07)
 ```
-
 
 ```
 mkdir /opensso/metadata
@@ -186,9 +182,7 @@ bufferLength=2048
 XMLSigningClass=com.sun.identity.saml2.xmlsig.FMSigProvider
 XMLEncryptionClass=com.sun.identity.saml2.xmlenc.FMEncProvider
 
-
 ./ssoadm set-attr-defs -u amadmin -f /tmp/adminpw -s sunFAMSAML2Configuration -t global -a bufferLength=4096
-
 ```
 
 
@@ -223,16 +217,6 @@ Authentication Instance was updated.
 Create a SAMLv2 Identity Provider on this Server
 
 http://idp4.canadacentral.cloudapp.azure.com/opensso/task/CreateHostedIDP?realm=%2F
-
-```
-ln -s -f /opensso-metadata/cats2-signed.xml /tomcat/webapps/gccf/cats2-signed.xml
-ln -s -f /tomcat/logs/catalina.out /tomcat/webapps/gccf/catalina-daemon.out
-touch /opensso/opensso/log/SAML2.access
-ln -s -f /opensso/opensso/log/SAML2.access /tomcat/webapps/ROOT/SAML2.access
-touch /opensso/opensso/log/SAML2.error
-ln -s -f /opensso/opensso/log/SAML2.error /tomcat/webapps/ROOT/SAML2.error
-ln -s -f /opensso/opensso/debug/Federation /tomcat/webapps/ROOT/Federation
-```
 
 
 ```
@@ -283,4 +267,14 @@ update-auth-instance --realm / --name DataStore --attributevalues sunAMAuthDataS
 create-cot --cot GCCF --prefix http://idp3.canadacentral.cloudapp.azure.com:8080/idpdiscovery
 import-entity --meta-data-file /opensso-metadata/idsim.xml --extended-data-file /opensso-metadata/idsim-extended.xml --cot GCCF
 set-attr-defs -s sunFAMFederationCommon -t global -a SignatureAlgorithm=http://www.w3.org/2001/04/xmldsig-more#rsa-sha256
+```
+
+```
+ln -s -f /opensso-metadata/cats2-signed.xml /tomcat/webapps/gccf/cats2-signed.xml
+ln -s -f /tomcat/logs/catalina.out /tomcat/webapps/gccf/catalina-daemon.out
+touch /opensso/opensso/log/SAML2.access
+ln -s -f /opensso/opensso/log/SAML2.access /tomcat/webapps/ROOT/SAML2.access
+touch /opensso/opensso/log/SAML2.error
+ln -s -f /opensso/opensso/log/SAML2.error /tomcat/webapps/ROOT/SAML2.error
+ln -s -f /opensso/opensso/debug/Federation /tomcat/webapps/ROOT/Federation
 ```
