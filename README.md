@@ -1,5 +1,7 @@
 # idp
 
+[SAML authentication with OpenAM + Node.js](https://qiita.com/nsp01/items/d1b328e5698f6ffd8345)
+
 [openam files](https://github.com/ricardosaracino/openam)
 
 [openam 11.0.3](https://github.com/ForgeRock/openam-community-edition/releases)
@@ -8,10 +10,11 @@
 
 ```
 systemctl stop firewalld
-hostnamectl set-hostname idp3.canadacentral.cloudapp.azure.com
-echo "13.88.254.72 idp3.canadacentral.cloudapp.azure.com" | tee -a /etc/hosts
+hostnamectl set-hostname idp4.canadacentral.cloudapp.azure.com
+echo "40.85.252.53 idp4.canadacentral.cloudapp.azure.com" | tee -a /etc/hosts
 
-yum update 
+yum update
+(devel gives us /usr/lib/jvm/java) 
 yum install git unzip alternatives java-1.8.0-openjdk-devel -y
 
 
@@ -42,10 +45,13 @@ chmod +x /tomcat/bin/*
 
 mkdir /tomcat/logs
 
-cp /tomcat/conf/tomcat-users.xml /tomcat/conf/tomcat-users.xml.old
+mkdir /tomcat/conf-bak
+
+cp /tomcat/conf/* /tomcat/conf-bak
 
 (edit pw)
 cp /opt/openam/tomcat-users.xml /tomcat/conf/tomcat-users.xml
+cp /opt/openam/server.xml /tomcat/conf/server.xml
 
 
 /tomcat/bin/startup.sh
@@ -56,82 +62,167 @@ amadmin:SAMLTest1
 
 
 ```
-mkdir /opensso-admin-tools
-cp -R /opt/openam/AM-SSOAdminTools-5.1.2.5/* /opensso-admin-tools
-chmod +x /opensso-admin-tools/setup
+
+(this could be a home dir)
+mkdir /opensso/
+
+run setup
+
+amadmin: SAMLTest1
+
+Port: 50389
+Admin Port: 4444
+JMX Port: 1689
+Encryption Key: KiIvlMXcv9GY5GoDriaOLwFksJNjLgB8
+Root Suffix: dc=openam,dc=forgerock,dc=org
+
+Directory Name: idp4.canadacentral.cloudapp.azure.com
+Port: 389
+Root Suffix: dc=openam,dc=forgerock,dc=org
+Login ID: cn=Directory Manager
+Password: SAMLTest2
+```
+
+
+```
+mkdir /opensso/ssoadm
+cp -R /opt/openam/AM-SSOAdminTools-5.1.2.5/* /opensso/ssoadm
+chmod +x /opensso/ssoadm/setup
 
 export JAVA_HOME="/usr/lib/jvm/java"
-cd /opensso-admin-tools
+cd /opensso/ssoadm
 ./setup
 
-Path to config files of OpenAM server [/root/openam]:/opensso
-Debug Directory [/opensso-admin-tools/debug]:
-Log Directory [/opensso-admin-tools/log]:
-The scripts are properly setup under directory: /opensso-admin-tools/opensso
-Debug directory is /opensso-admin-tools/debug.
-Log directory is /opensso-admin-tools/log.
+Path to config files of OpenAM server [/root/openam]:/opensso/opensso
+Debug Directory [/opensso/ssoadm/debug]:
+Log Directory [/opensso/ssoadm/log]:
+The scripts are properly setup under directory: /opensso/ssoadm/opensso
+Debug directory is /opensso/ssoadm/debug.
+Log directory is /opensso/ssoadm/log.
 The version of this tools.zip is: OpenAM 14.1.2.5
 The version of your server instance is: ForgeRock Access Management 6.5.2 Build 314d553429 (2019-June-17 15:07)
 ```
 
 
 ```
-mkdir opensso-metadata
+mkdir /opensso/metadata
 
-sed -e "s^xxENTITY_IDxx^`hostname`^g" -e "s^xxPROTOCOLxx^http^g" -e "s^xxHOST_NAMExx^`hostname`:8080^g" /opt/openam/templates/metadata/idsim.xml > /opensso-metadata/idsim.xml
+sed -e "s^xxENTITY_IDxx^`hostname`^g" -e "s^xxPROTOCOLxx^http^g" -e "s^xxHOST_NAMExx^`hostname`^g" /opt/openam/templates/metadata/idsim.xml > /opensso/metadata/idsim.xml
 
-sed -e "s^xxENTITY_IDxx^`hostname`^g" -e "s^xxPROTOCOLxx^http^g" -e "s^xxHOST_NAMExx^`hostname`:8080^g" /opt/openam/templates/metadata/idsim-extended.xml > /opensso-metadata/idsim-extended.xml
+sed -e "s^xxENTITY_IDxx^`hostname`^g" -e "s^xxPROTOCOLxx^http^g" -e "s^xxHOST_NAMExx^`hostname`^g" /opt/openam/templates/metadata/idsim-extended.xml > /opensso/metadata/idsim-extended.xml
 
-sed -e "s^xxENTITY_IDxx^`hostname`^g" -e "s^xxPROTOCOLxx^http^g" -e "s^xxHOST_NAMExx^`hostname`:8080^g" /opt/openam/templates/metadata/cats2.xml > /opensso-metadata/cats2.xml
+sed -e "s^xxENTITY_IDxx^`hostname`^g" -e "s^xxPROTOCOLxx^http^g" -e "s^xxHOST_NAMExx^`hostname`^g" /opt/openam/templates/metadata/cats2.xml > /opensso/metadata/cats2.xml
 
 (noticed this /tomcat/webapps/opensso/WEB-INF/template/keystore/keystore.jks)
 
-java -jar /opt/openam/tools/Signer.jar /opensso-metadata/cats2.xml /opensso-metadata/cats2-signed.xml /opt/openam/ICM/keystore.jks idptest1_signing SHA256
+java -jar /opt/openam/Signer.jar /opensso/metadata/cats2.xml /opensso/metadata/cats2-signed.xml /opt/openam/keystore.jks idptest1_signing SHA256
 ```
 
 
-```
+## Service Configurations
 
+http://idp4.canadacentral.cloudapp.azure.com/opensso/services.jsp
+
+```
 echo "SAMLTest1" > /tmp/adminpw
 chmod 400 /tmp/adminpw
+```
 
-cd /opensso-admin-tools/opensso/bin/
+### Backup
+``` 
+./ssoadm export-svc-cfg -u amadmin -f /tmp/adminpw -e ricardosaracino -o /opensso/scv-config.xml
+./ssoadm import-svc-cfg -u amadmin -f /tmp/adminpw -e ricardosaracino -X /opensso/scv-config.xml
+```
 
-(edit host)
-./ssoadm do-batch --adminid amadmin --password-file /tmp/adminpw --batchfile /opt/openam/openssoadm.conf
+
+### sunFAMFederationCommon
+```
+./ssoadm get-attr-defs -u amadmin -f /tmp/adminpw -s sunFAMFederationCommon -t global
+
+CheckCert=off
+ConfigurationClass=com.sun.identity.plugin.configuration.impl.ConfigurationInstanceImpl
+TransformationAlgorithm=http://www.w3.org/2001/10/xml-exc-c14n#
+SAMLErrorPageHTTPBinding=HTTP-POST
+MonAgentClass=com.sun.identity.plugin.monitoring.impl.AgentProvider
+MaxContentLength=20480
+QuerySignatureAlgorithmRSA=http://www.w3.org/2001/04/xmldsig-more#rsa-sha256
+SignatureAlgorithm=http://www.w3.org/2001/04/xmldsig-more#rsa-sha256
+SAMLErrorPageURL=/saml2/jsp/saml2error.jsp
+SignatureProviderClass=com.sun.identity.saml.xmlsig.AMSignatureProvider
+KeyProviderClass=com.sun.identity.saml.xmlsig.JKSKeyProvider
+QuerySignatureAlgorithmEC=http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512
+MonSAML2Class=com.sun.identity.plugin.monitoring.impl.FedMonSAML2SvcProvider
+MaskGenerationFunction=http://www.w3.org/2009/xmlenc11#mgf1sha256
+SessionProviderClass=com.sun.identity.plugin.session.impl.FMSessionProvider
+CannonicalizationAlgorithm=http://www.w3.org/2001/10/xml-exc-c14n#
+MonIDFFClass=com.sun.identity.plugin.monitoring.impl.FedMonIDFFSvcProvider
+LoggerClass=com.sun.identity.plugin.log.impl.LogProvider
+MonSAML1Class=com.sun.identity.plugin.monitoring.impl.FedMonSAML1SvcProvider
+DatastoreClass=com.sun.identity.plugin.datastore.impl.IdRepoDataStoreProvider
+QuerySignatureAlgorithmDSA=http://www.w3.org/2009/xmldsig11#dsa-sha256
+PasswordDecoderClass=com.sun.identity.saml.xmlsig.FMPasswordDecoder
+DigestAlgorithm=http://www.w3.org/2001/04/xmlenc#sha256
+
+./ssoadm set-attr-defs -u amadmin -f /tmp/adminpw -s sunFAMFederationCommon -t global -a CheckCert=off
+
+./ssoadm set-attr-defs -u amadmin -f /tmp/adminpw -s sunFAMFederationCommon -t global -a SignatureAlgorithm=http://www.w3.org/2001/04/xmldsig-more#rsa-sha256
+```
+
+### sunFAMSAML2Configuration
+```
+./ssoadm get-attr-defs -u amadmin -f /tmp/adminpw -s sunFAMSAML2Configuration -t global
+
+NameIDInfoKeyAttribute=sun-fm-saml2-nameid-infokey
+EncryptedKeyInKeyInfo=true
+CacheCleanupInterval=600
+NameIDInfoAttribute=sun-fm-saml2-nameid-info
+IDPDiscoveryCookieDomain=idp4.canadacentral.cloudapp.azure.com
+IDPDiscoveryURLScheme=https
+SigningCertValidation=false
+CACertValidation=false
+failOverEnabled=false
+IDPDiscoveryCookieType=PERSISTENT
+bufferLength=2048
+XMLSigningClass=com.sun.identity.saml2.xmlsig.FMSigProvider
+XMLEncryptionClass=com.sun.identity.saml2.xmlenc.FMEncProvider
 
 
+./ssoadm set-attr-defs -u amadmin -f /tmp/adminpw -s sunFAMSAML2Configuration -t global -a bufferLength=4096
 
-The configuration of http://idp3.canadacentral.cloudapp.azure.com:8080/opensso was updated.
+```
 
-The configuration of http://idp3.canadacentral.cloudapp.azure.com:8080/opensso was updated.
 
-Update succeeded with unknown property values.
+### sunAMAuthDataStoreService
+```
+./ssoadm get-attr-defs -u amadmin -f /tmp/adminpw -s sunAMAuthDataStoreAuthLevel -t global
 
-The configuration of http://idp3.canadacentral.cloudapp.azure.com:8080/opensso was updated.
+```
 
-Schema attribute defaults were set.
+### Circle of Trust
 
-Schema attribute defaults were set.
+[Applications - Federation circlesOfTrust GCCF](http://idp4.canadacentral.cloudapp.azure.com/opensso/XUI/#realms/%2F/applications-federation/circlesOfTrust/edit/GCCF)
 
-Schema attribute defaults were set.
-
-Schema attribute defaults were set.
-
-Authentication Instance was updated.
+```
+./ssoadm create-cot -u amadmin -f /tmp/adminpw --cot GCCF -p http://idp4.canadacentral.cloudapp.azure.com:80/idpdiscovery
 
 Circle of trust, GCCF was created.
 
-Import file, /opensso-metadata/idsim.xml.
-Import file, /opensso-metadata/idsim-extended.xml.
 
-Schema attribute defaults were set.
+./ssoadm import-entity -u amadmin -f /tmp/adminpw --meta-data-file /opensso/metadata/idsim.xml --extended-data-file /opensso/metadata/idsim-extended.xml --cot GCCF
 
+Import file, /opensso/metadata/idsim.xml.
+Import file, /opensso/metadata/idsim-extended.xml.
+
+
+./ssoadm update-auth-instance -u amadmin -f /tmp/adminpw  --realm / --name DataStore --attributevalues sunAMAuthDataStoreAuthLevel=2
+
+Authentication Instance was updated.
 ```
 
-##### ERROR: AuthUtils:getAuthContext(): Invalid Session Timed out
-https://forum.forgerock.com/topic/loggin-issue/
 
+Create a SAMLv2 Identity Provider on this Server
+
+http://idp4.canadacentral.cloudapp.azure.com/opensso/task/CreateHostedIDP?realm=%2F
 
 ```
 ln -s -f /opensso-metadata/cats2-signed.xml /tomcat/webapps/gccf/cats2-signed.xml
@@ -180,7 +271,6 @@ netstat -tulpn
 subjectAltName=DNS:idp1.canadacentral.cloudapp.azure.com,DNS:.
 ```
 
-
 ```
 update-server-cfg -s http://idp3.canadacentral.cloudapp.azure.com:8080/opensso -a com.iplanet.am.cookie.encode=true
 update-server-cfg -s http://idp3.canadacentral.cloudapp.azure.com:8080/opensso -a com.iplanet.am.cookie.secure=true
@@ -193,14 +283,4 @@ update-auth-instance --realm / --name DataStore --attributevalues sunAMAuthDataS
 create-cot --cot GCCF --prefix http://idp3.canadacentral.cloudapp.azure.com:8080/idpdiscovery
 import-entity --meta-data-file /opensso-metadata/idsim.xml --extended-data-file /opensso-metadata/idsim-extended.xml --cot GCCF
 set-attr-defs -s sunFAMFederationCommon -t global -a SignatureAlgorithm=http://www.w3.org/2001/04/xmldsig-more#rsa-sha256
-
-```
-
-
-
-```
-
-
-{"realm":"/","transactionId":"f1766131-a99e-4df7-a6ad-885c337d5352-4014","component":"Authentication","eventName":"AM-LOGIN-MODULE-COMPLETED","result":"SUCCESSFUL","entries":[{"moduleId":"DataStore","info":{"authControlFlag":"REQUIRED","moduleClass":"DataStore","ipAddress":"52.237.21.105","authLevel":"0"}}],"principal":["amadmin"],"timestamp":"2019-07-23T18:06:57.505Z","trackingIds":["f1766131-a99e-4df7-a6ad-885c337d5352-3943"],"_id":"f1766131-a99e-4df7-a6ad-885c337d5352-4052"}
-
 ```
