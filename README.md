@@ -165,25 +165,24 @@ Remote SP metadata
     <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
 
         <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
-                             Location="http://localhost:3000/api/auth/logout"/>
+                             Location="http://localhost:3000/auth/logout/callback"/>
 
         <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
-                                  Location="http://localhost:3000/api/auth/callback" index="0"/>
+                                  Location="http://localhost:3000/auth/login/callback" index="0"/>
         <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post"
-                                  Location="http://localhost:3000/api/auth/callback" index="1"/>
+                                  Location="http://localhost:3000/auth/login/callback" index="1"/>
         <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact"
-                                  Location="http://localhost:3000/api/auth/callback" index="2"/>
+                                  Location="http://localhost:3000/auth/login/callback" index="2"/>
         <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01"
-                                  Location="http://localhost:3000/api/auth/callback" index="3"/>
+                                  Location="http://localhost:3000/auth/login/callback" index="3"/>
         <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:profiles:holder-of-key:SSO:browser"
-                                  Location="http://localhost:3000/api/auth/callback" index="4"/>
+                                  Location="http://localhost:3000/auth/login/callback" index="4"/>
     </SPSSODescriptor>
     <ContactPerson contactType="technical">
         <GivenName>Administrator</GivenName>
         <EmailAddress>noreply@example.org</EmailAddress>
     </ContactPerson>
 </EntityDescriptor>
-
 ```
 
 Passport
