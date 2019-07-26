@@ -2,11 +2,10 @@
 
 [SAML authentication with OpenAM + Node.js](https://qiita.com/nsp01/items/d1b328e5698f6ffd8345)
 
-[openam files](https://github.com/ricardosaracino/openam)
-
 [openam 11.0.3](https://github.com/ForgeRock/openam-community-edition/releases)
 
->NOTE DIRECTORIES WERE RESTRUCTURED
+
+Configure `SELINUX=disabled` in the `/etc/selinux/config` file
 
 ```
 systemctl stop firewalld
@@ -115,6 +114,19 @@ java -jar /opt/openam/Signer.jar /opensso/metadata/cats2.xml /opensso/metadata/c
 ```
 
 
+```
+LDAP Server (change from 389)
+localhost:50389
+
+cd /opensso/opensso/opends/bin
+
+./ldapsearch -p 50389 -D "cn=Directory Manager" -w SAMLTest1 --baseDN dc=openam,dc=forgerock,dc=org objectclass=*
+
+curl --request POST --data "username=test&password=SAMLTest1" http://idp4.canadacentral.cloudapp.azure.com/opensso/identity/authenticate"
+```
+
+
+
 ## Service Configurations
 
 http://idp4.canadacentral.cloudapp.azure.com/opensso/services.jsp
@@ -126,7 +138,7 @@ chmod 400 /tmp/adminpw
 
 ### Backup
 ``` 
-./ssoadm export-svc-cfg -u amadmin -f /tmp/adminpw -e ricardosaracino -o /opensso/scv-config.xml
+./ssoadm export-svc-cfg -u amadmin -f /tmp/adminpw -e ricardosaracino -o /opensso/scv-config-gccf.xml
 ./ssoadm import-svc-cfg -u amadmin -f /tmp/adminpw -e ricardosaracino -X /opensso/scv-config.xml
 ```
 
@@ -189,7 +201,6 @@ XMLEncryptionClass=com.sun.identity.saml2.xmlenc.FMEncProvider
 ### sunAMAuthDataStoreService
 ```
 ./ssoadm get-attr-defs -u amadmin -f /tmp/adminpw -s sunAMAuthDataStoreAuthLevel -t global
-
 ```
 
 ### Circle of Trust
