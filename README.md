@@ -1,4 +1,4 @@
-# idp
+# SAML authentication with OpenAM + Node.js (+ Express + passport-saml)
 
 [SAML authentication with OpenAM + Node.js](https://qiita.com/nsp01/items/d1b328e5698f6ffd8345)
 
