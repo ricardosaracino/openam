@@ -1,5 +1,5 @@
 <EntityConfig xmlns="urn:sun:fm:SAML:2.0:entityconfig" xmlns:fm="urn:sun:fm:SAML:2.0:entityconfig"
-            hosted="1" entityID="xxENTITY_IDxx">
+              hosted="1" entityID="xxENTITY_IDxx">
     <IDPSSOConfig metaAlias="/idp">
         <Attribute name="description">
             <Value>CATS IDP Simulator</Value>
@@ -32,8 +32,8 @@
             <Value>com.sun.identity.saml2.plugins.DefaultIDPAuthnContextMapper</Value>
         </Attribute>
         <Attribute name="idpAuthncontextClassrefMapping">
-           <Value>urn:gc-ca:cyber-auth:assurance:loa1|1|authlevel=1|</Value>
-           <Value>urn:gc-ca:cyber-auth:assurance:loa2|2|authlevel=2|default</Value>
+            <Value>urn:gc-ca:cyber-auth:assurance:loa1|1|authlevel=1|</Value>
+            <Value>urn:gc-ca:cyber-auth:assurance:loa2|2|authlevel=2|default</Value>
         </Attribute>
         <Attribute name="idpAccountMapper">
             <Value>com.sun.identity.saml2.plugins.DefaultIDPAccountMapper</Value>
@@ -45,11 +45,11 @@
             <Value>com.sun.identity.saml2.plugins.DefaultAssertionIDRequestMapper</Value>
         </Attribute>
         <Attribute name="nameIDFormatMap">
-           <Value>urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress=mail</Value>
-           <Value>urn:oasis:names:tc:SAML:1.1:nameid-format:X509SubjectName=</Value>
-           <Value>urn:oasis:names:tc:SAML:1.1:nameid-format:WindowsDomainQualifiedName=</Value>
-           <Value>urn:oasis:names:tc:SAML:2.0:nameid-format:kerberos=</Value>
-           <Value>urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified=</Value>
+            <Value>urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress=mail</Value>
+            <Value>urn:oasis:names:tc:SAML:1.1:nameid-format:X509SubjectName=</Value>
+            <Value>urn:oasis:names:tc:SAML:1.1:nameid-format:WindowsDomainQualifiedName=</Value>
+            <Value>urn:oasis:names:tc:SAML:2.0:nameid-format:kerberos=</Value>
+            <Value>urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified=</Value>
         </Attribute>
         <Attribute name="idpECPSessionMapper">
             <Value>com.sun.identity.saml2.plugins.DefaultIDPECPSessionMapper</Value>
@@ -93,12 +93,12 @@
         <Attribute name="AuthUrl">
             <Value></Value>
         </Attribute>
-       <Attribute name="appLogoutUrl">
-           <Value></Value>
-       </Attribute>
-       <Attribute name="idpSessionSyncEnabled">
-           <Value>false</Value>
-       </Attribute>
+        <Attribute name="appLogoutUrl">
+            <Value></Value>
+        </Attribute>
+        <Attribute name="idpSessionSyncEnabled">
+            <Value>false</Value>
+        </Attribute>
         <Attribute name="relayStateUrlList">
         </Attribute>
     </IDPSSOConfig>
