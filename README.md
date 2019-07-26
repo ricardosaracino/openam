@@ -1,12 +1,8 @@
 # SAML authentication with OpenAM & NestJS (Node.js + Express + passport-saml)
 
-[SAML authentication with OpenAM + Node.js](https://qiita.com/nsp01/items/d1b328e5698f6ffd8345)
-
-[Saml Request Decode](https://idp.ssocircle.com/sso/toolbox/samlDecode.jsp)
-
 [Project Source](https://github.com/ricardosaracino/nestjs-sp)
 
-Configure `SELINUX=disabled` in the `/etc/selinux/config` file
+[SAML authentication with OpenAM + Node.js](https://qiita.com/nsp01/items/d1b328e5698f6ffd8345)
 
 ### Useful commands
 ```bash
@@ -19,7 +15,12 @@ find /dir -type f -exec chmod 644 {} \;
 journalctl -f -u 
 
 netstat -tulpn
+
+Configure `SELINUX=disabled` in the `/etc/selinux/config` file
 ```
+
+[Saml Request Decode](https://idp.ssocircle.com/sso/toolbox/samlDecode.jsp)
+
 
 ### Hosts
 ```bash
