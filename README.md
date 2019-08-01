@@ -317,18 +317,37 @@ keytool -importkeystore -srckeystore idpkeystore.p12 -srcstoretype pkcs12 -srcal
 - Paste Metadata in Custom Service Providers
 
 
-#### Import Certificate
+#### Import Certificate 
 
 [Importing the certificate into the truststore](https://backstage.forgerock.com/knowledge/kb/article/a94909995)
+
+[Importing Cert for signature](https://backstage.forgerock.com/knowledge/kb/article/a21753800#importcert)
 
 Paste contents of certificate in `/tmp/sp.cer`
 
 ```bash
+
+keytool -list -keystore /usr/lib/jvm/java/jre/lib/security/cacerts
+
 cp /usr/lib/jvm/java/jre/lib/security/cacerts /opensso/keystore-inital/java-cacerts
+
+THIS DIDNT WORK 
 
 keytool -importcert -alias nodejs-sp -file /tmp/sp.cer -trustcacerts -keystore /usr/lib/jvm/java/jre/lib/security/cacerts -storetype JKS
 
 Enter keystore password: changeit
+
+
+keytool -importcert -alias nodejs-sp -file /tmp/sp.cer -trustcacerts -keystore /opensso/opensso/opensso/keystore.jks -storetype JKS -storepass `cat /opensso/opensso/opensso/.storepass`
+
+keytool -importcert -alias nodejs-sp-01 -file /tmp/sp.cer -trustcacerts -keystore /opensso/opensso/opensso/keystore.jceks -storetype jceks -storepass `cat /opensso/opensso/opensso/.storepass`
+
+
+keytool -list -keystore /opensso/opensso/opensso/keystore.jks | grep nodejs
+keytool -list -keystore /opensso/opensso/opensso/keystore.jceks | grep nodejs
+
+
+
 ```
 
 #### Raw Metadata
