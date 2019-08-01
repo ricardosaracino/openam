@@ -24,7 +24,7 @@
 
    Portions Copyrighted 2010-2017 ForgeRock AS.
 -->
-<EntityConfig xmlns="urn:sun:fm:SAML:2.0:entityconfig" xmlns:fm="urn:sun:fm:SAML:2.0:entityconfig" hosted="1" entityID="FEDLET_ENTITY_ID">
+<EntityConfig xmlns="urn:sun:fm:SAML:2.0:entityconfig" xmlns:fm="urn:sun:fm:SAML:2.0:entityconfig" hosted="1" entityID="fedlet-sp">
     <SPSSOConfig metaAlias="/sp">
         <Attribute name="description">
             <Value></Value>
@@ -129,7 +129,7 @@
            <Value></Value>
        </Attribute>
        <Attribute name="cotlist">
-           <Value>fedletcot</Value></Attribute>
+           <Value>COT</Value></Attribute>
        <Attribute name="saeAppSecretList">
        </Attribute>
        <Attribute name="saeSPUrl">
@@ -167,7 +167,7 @@
            <Value></Value>
         </Attribute>
         <Attribute name="cotlist">
-           <Value>fedletcot</Value>
+           <Value>COT</Value>
         </Attribute>
     </AttributeQueryConfig>
     <XACMLAuthzDecisionQueryConfig metaAlias="/pep">
@@ -193,7 +193,7 @@
             <Value></Value>
         </Attribute>
         <Attribute name="cotlist">
-            <Value>fedletcot</Value>
+            <Value>COT</Value>
         </Attribute>
    </XACMLAuthzDecisionQueryConfig>
 </EntityConfig>

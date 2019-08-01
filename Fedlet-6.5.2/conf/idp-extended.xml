@@ -31,12 +31,12 @@
             <Value/>
         </Attribute>
         <Attribute name="cotlist">
-            <Value>fedletcot</Value>
+            <Value>COT</Value>
         </Attribute>
     </IDPSSOConfig>
     <AttributeAuthorityConfig>
         <Attribute name="cotlist">
-            <Value>fedletcot</Value>
+            <Value>COT</Value>
         </Attribute>
     </AttributeAuthorityConfig>
     <XACMLPDPConfig>
@@ -44,7 +44,7 @@
             <Value></Value>
         </Attribute>
         <Attribute name="cotlist">
-            <Value>fedletcot</Value>
+            <Value>COT</Value>
         </Attribute>
     </XACMLPDPConfig>
 </EntityConfig>

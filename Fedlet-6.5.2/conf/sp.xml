@@ -24,7 +24,7 @@
 
    Portions Copyrighted 2010-2017 ForgeRock AS.
 -->
-<EntityDescriptor entityID="FEDLET_ENTITY_ID" xmlns="urn:oasis:names:tc:SAML:2.0:metadata">
+<EntityDescriptor entityID="fedlet-sp" xmlns="urn:oasis:names:tc:SAML:2.0:metadata">
     <SPSSODescriptor AuthnRequestsSigned="false" WantAssertionsSigned="false"
                      protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
         <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
