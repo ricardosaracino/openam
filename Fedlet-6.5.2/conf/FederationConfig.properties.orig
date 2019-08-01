@@ -77,9 +77,9 @@ com.sun.identity.saml.xmlsig.signatureprovider.class=com.sun.identity.saml.xmlsi
 com.sun.identity.common.serverMode=false
 
 com.iplanet.am.server.protocol=http
-com.iplanet.am.server.host=http://idp5.canadacentral.cloudapp.azure.com
-com.iplanet.am.server.port=80
-com.iplanet.am.services.deploymentDescriptor=/opensso
+com.iplanet.am.server.host=openam.example.com
+com.iplanet.am.server.port=8080
+com.iplanet.am.services.deploymentDescriptor=/openam
 com.iplanet.am.logstatus=ACTIVE
 
 
@@ -97,9 +97,9 @@ com.sun.identity.webcontainer=WEB_CONTAINER
 
 # Identify saml xml signature keystore file, keystore password file
 # key password file
-com.sun.identity.saml.xmlsig.keystore=/opensso/opensso/opensso/keystore.jks
-com.sun.identity.saml.xmlsig.storepass=/opensso/opensso/opensso/.storepass
-com.sun.identity.saml.xmlsig.keypass=/opensso/opensso/opensso/.keypass
+com.sun.identity.saml.xmlsig.keystore=%BASE_DIR%/keystore.jks
+com.sun.identity.saml.xmlsig.storepass=%BASE_DIR%/.storepass
+com.sun.identity.saml.xmlsig.keypass=%BASE_DIR%/.keypass
 com.sun.identity.saml.xmlsig.certalias=test
 
 
